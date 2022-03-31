@@ -1,3 +1,4 @@
+import 'package:batut_de/styles.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -95,12 +96,13 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
+            Text(
               'You have pushed the button this many times:',
+                style: Styles.getTextStyle()
             ),
             Text(
               '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              style: Styles.getTextStyle()
             ),
           ],
         ),
