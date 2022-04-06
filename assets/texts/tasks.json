@@ -1,0 +1,16 @@
+{
+  "supermarkt":
+  {
+    "dialogs" : [
+      ["Hallo! Entschuldigung, können Sie mir bitte sagen, wo hier ein Supermarkt ist?"],
+      ["Hallo, gerne."]
+    ]
+  }
+  ,
+  "difficult": {},
+  "doctor": {},
+  "greetings": {},
+  "apartment": {},
+  "restaurant": {}
+
+}
