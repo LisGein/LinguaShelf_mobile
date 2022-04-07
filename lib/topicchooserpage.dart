@@ -1,9 +1,9 @@
-import 'package:batut_de/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../basepage.dart';
 import 'applicationstate.dart';
+import 'lslistwidget.dart';
 
 class TopicChooserPage extends BasePage {
 
@@ -18,26 +18,7 @@ class TopicChooserPage extends BasePage {
                   if (!topics.hasData) {
                     return const Text("No data in json!");
                   }
-
-                  return ListView.separated(
-                    itemCount: topics.data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(context, '/topic/' + index.toString());
-                        },
-                        child: SizedBox(
-                            height: 150,
-                            child: Center(
-                              child: Text(topics.data[index].values.first,
-                                  style: Styles.getTextStyle(color: Colors.white)),
-                            )),
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) =>
-                    const Divider(thickness: 5),
-
-                  );
+                  return LsListWidget(data: topics.data, routeName: 'topic');
                 }));
   }
 }

@@ -1,10 +1,31 @@
 {
   "supermarkt":
   {
-    "dialogs" : [
+    "dialogs" :
+    {
+      "phrases": [
       ["Hallo! Entschuldigung, können Sie mir bitte sagen, wo hier ein Supermarkt ist?"],
       ["Hallo, gerne."]
-    ]
+    ],
+      "translation" : [
+        ["Здравствуйте! Извините. не могли бы Вы подсказать, где здесть есть супермаркет?"],
+        ["Здравствуйте, конечно"]
+      ]
+    },
+    "vocabulary": {
+      "hallo":  "здравствуйте",
+      "Entschuldigung": "извините",
+      "Sie": "Вы",
+      "mir": "мне",
+      "bitte": "пожалуйста",
+      "sagen": "сказать",
+      "wo": "где",
+      "hier": "здесь",
+      "ein": "неопределённый артикль",
+      "Supermarkt": "супермаркет",
+      "ist": "есть"
+    }
+
   }
   ,
   "difficult": {},

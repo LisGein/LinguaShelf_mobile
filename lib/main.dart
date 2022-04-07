@@ -26,11 +26,16 @@ class MainWidget extends StatelessWidget {
         }
 
         var uri = Uri.parse(settings.name!);
-        if (uri.pathSegments.length == 2 && uri.pathSegments.first == 'topic') {
-          var topicID = int.parse(uri.pathSegments[1]);
-          return MaterialPageRoute(
-              builder: (context) => TopicTasksChooserPage(topicID:topicID),
+        if (uri.pathSegments.length > 1 && uri.pathSegments.first == 'topic') {
+          var topic = uri.pathSegments[1].toString();
+          if (uri.pathSegments.length == 2) {
+            return MaterialPageRoute(
+              builder: (context) => TopicTasksChooserPage(topic:topic),
               settings: settings);
+          } else if (uri.pathSegments.length == 3) {
+
+
+          }
         }
 
         return MaterialPageRoute(
