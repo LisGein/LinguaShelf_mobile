@@ -9,20 +9,17 @@ import 'lslistwidget.dart';
 class TopicTasksChooserPage extends BasePage {
   TopicTasksChooserPage({required this.topic});
 
+  void init() {}
+
   String topic;
-  List<Map<String, String>> trainingParts = [{"vocabulary": "Vocabulary"}, {"dialogs": "Dialogs"}];
+  List<Map<String, String>> trainingParts = [
+    {"vocabulary": "Vocabulary"},
+    {"dialogs": "Dialogs"}
+  ];
 
   @override
   Widget buildBody(BuildContext context) {
-    return Consumer<ApplicationState>(builder: (context, appState, _) {
-      return FutureBuilder<dynamic>(
-          future: appState.jsonReader.loadDialog(topic),
-          builder: (BuildContext context, AsyncSnapshot<dynamic> dialog) {
-            if (dialog.hasData) {
-                return LsListWidget(data: trainingParts, routeName: "topic/" + topic);
-            }
-            return Text("No data");
-          });
-    });
+    Provider.of<ApplicationState>(context, listen: true).loadDialog(topic);//listen - rerender
+    return LsListWidget(data: trainingParts, routeName: "topic/" + topic);
   }
 }

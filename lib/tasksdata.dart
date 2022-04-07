@@ -2,7 +2,7 @@
 typedef VariantsOfPhrases = List<String>;
 
 
-class TasksData {
+class TaskData {
   List<VariantsOfPhrases> phrases = [];
   List<VariantsOfPhrases> translations = [];
   Map<String, String> vocabulary = {};

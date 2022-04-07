@@ -17,8 +17,8 @@ class JsonReader {
     return topics;
   }
 
-  Future<TasksData> loadDialog(String topic) async {
-    var data = TasksData();
+  Future<TaskData> loadDialog(String topic) async {
+    var data = TaskData();
 
     var parsedJson = await _loadParsedJson('assets/texts/tasks.json');
     if (parsedJson != null && parsedJson[topic] != null
@@ -44,10 +44,8 @@ class JsonReader {
         }
       }
 
-      if (parsedJson[topic]["dialogs"]["vocabulary"] != null) {
-        for (var pair in parsedJson[topic]["dialogs"]["vocabulary"]) {
-          data.vocabulary.addEntries(pair);
-        }
+      if (parsedJson[topic]["vocabulary"] != null) {
+        data.vocabulary = Map.castFrom(parsedJson[topic]["vocabulary"]);
       }
     }
     return data;
