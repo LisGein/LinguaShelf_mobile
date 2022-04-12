@@ -9,8 +9,6 @@ import 'lslistwidget.dart';
 class TopicTasksChooserPage extends BasePage {
   TopicTasksChooserPage({required this.topic});
 
-  void init() {}
-
   String topic;
   List<Map<String, String>> trainingParts = [
     {"vocabulary": "Vocabulary"},

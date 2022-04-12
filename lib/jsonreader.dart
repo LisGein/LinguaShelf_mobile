@@ -45,7 +45,9 @@ class JsonReader {
       }
 
       if (parsedJson[topic]["vocabulary"] != null) {
-        data.vocabulary = Map.castFrom(parsedJson[topic]["vocabulary"]);
+        Map<String, String> vocabulary = Map.castFrom(parsedJson[topic]["vocabulary"]);
+        data.words = vocabulary.keys.map((e) => e).toList();
+        data.wordsTranslations = vocabulary.values.map((e) => e).toList();
       }
     }
     return data;

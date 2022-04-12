@@ -1,5 +1,6 @@
 import 'package:batut_de/basepage.dart';
 import 'package:batut_de/styles.dart';
+import 'package:batut_de/words/writewordpage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -16,13 +17,10 @@ class VocabularyPage extends BasePage {
 
           builder: (BuildContext context, AsyncSnapshot<dynamic> taskData) {
             if (taskData.hasData) {
-              List<Text> listOfWords = [];
-
-              for (var item in taskData.data.vocabulary.entries) {
-                listOfWords.add(Text(item.key + " - " + item.value,
-                    style: Styles.getTextStyle()));
-              };
-              return Column(children: listOfWords);
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: WriteWordWidget(translations: taskData.data.wordsTranslations, words: taskData.data.words),
+              );
             }
             return Column(children: [
               Text("No vocabulary found for this topic",

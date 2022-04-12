@@ -10,5 +10,6 @@ class ApplicationState extends ChangeNotifier {
 
   void loadDialog(String topic) {
     currentTaskData = jsonReader.loadDialog(topic);
+    //notifyListeners();
   }
 }
