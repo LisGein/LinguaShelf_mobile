@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
+import '../LsWidgets/lstext.dart';
+
 enum InputState { NotSubmited, Wrong, Right }
 
 class WriteWordWidget extends StatefulWidget {
@@ -40,8 +42,7 @@ class _WriteWordState extends State<WriteWordWidget> {
   Widget _inputWord() {
     return Center(
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text(widget.translations[widget.wordIndex],
-            style: Styles.getTextStyle()),
+        LsWhiteText(widget.translations[widget.wordIndex]),
         TextFormField(
             controller: _controller,
             decoration:
@@ -55,7 +56,7 @@ class _WriteWordState extends State<WriteWordWidget> {
               widget.inputCallback(_controller.text);
               setState(() {});
             },
-            child: const Text('Проверить'))
+            child: LsWhiteText('Проверить'))
       ]),
     );
   }
@@ -69,15 +70,11 @@ class _WriteWordState extends State<WriteWordWidget> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        if (widget.state == InputState.Wrong)
-          Text("Неправильно", style: Styles.getTextStyle()),
-        if (widget.state == InputState.Right)
-          Text("Верно", style: Styles.getTextStyle()),
-        Text(
-            widget.words[widget.wordIndex] +
-                " - " +
-                widget.translations[widget.wordIndex],
-            style: Styles.getTextStyle()),
+        if (widget.state == InputState.Wrong) LsWhiteText("Неправильно"),
+        if (widget.state == InputState.Right) LsWhiteText("Верно"),
+        LsWhiteText(widget.words[widget.wordIndex] +
+            " - " +
+            widget.translations[widget.wordIndex]),
       ],
     );
   }
@@ -90,9 +87,8 @@ class _WriteWordState extends State<WriteWordWidget> {
           child: SizedBox(
               height: 50,
               child: Center(
-                child: Text(
-                    widget.words[index] + " - " + widget.translations[index],
-                    style: Styles.getTextStyle(color: Colors.white)),
+                child: LsWhiteText(
+                    widget.words[index] + " - " + widget.translations[index]),
               )),
         );
       },
