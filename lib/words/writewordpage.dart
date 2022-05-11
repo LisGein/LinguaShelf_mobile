@@ -1,6 +1,4 @@
 import 'package:async/async.dart';
-import 'package:batut_de/lslistwidget.dart';
-import 'package:batut_de/styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';

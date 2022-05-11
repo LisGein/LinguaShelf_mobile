@@ -13,6 +13,8 @@ class MainWidget extends StatelessWidget {
     return MaterialApp(
       title: 'Batut.de',
       theme: ThemeData(
+          //colorScheme: ColorScheme(primary: Color.fromARGB(250, 0, 87, 183), onPrimary: Colors.white, brightness: Brightness.light,
+          //    secondary: Color.fromARGB(250, 252, 136, 3), onSecondary: Colors.white, ),
           backgroundColor: Colors.red,
           elevatedButtonTheme: ElevatedButtonThemeData(
               style: ElevatedButton.styleFrom(

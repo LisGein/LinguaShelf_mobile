@@ -1,5 +1,5 @@
+import 'package:batut_de/LsWidgets/lstext.dart';
 import 'package:batut_de/basepage.dart';
-import 'package:batut_de/styles.dart';
 import 'package:batut_de/words/writewordpage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +23,7 @@ class VocabularyPage extends BasePage {
               );
             }
             return Column(children: [
-              Text("No vocabulary found for this topic",
-                  style: Styles.getTextStyle())
+              LsWhiteText("No vocabulary found for this topic")
             ]);
           });
     });

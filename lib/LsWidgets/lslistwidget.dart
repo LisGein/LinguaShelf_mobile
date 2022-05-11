@@ -1,4 +1,4 @@
-import 'package:batut_de/styles.dart';
+import 'package:batut_de/LsWidgets/lstext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -20,8 +20,7 @@ class LsListWidget extends StatelessWidget {
           child: SizedBox(
               height: 150,
               child: Center(
-                child: Text(data[index].values.first,
-                    style: Styles.getTextStyle(color: Colors.white)),
+                child: LsWhiteText(data[index].values.first),
               )),
         );
       },

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'applicationstate.dart';
 import 'basepage.dart';
-import 'lslistwidget.dart';
+import 'LsWidgets/lslistwidget.dart';
 
 class TopicTasksChooserPage extends BasePage {
   TopicTasksChooserPage({required this.topic});

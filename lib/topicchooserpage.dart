@@ -1,9 +1,10 @@
+import 'package:batut_de/LsWidgets/lstext.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../basepage.dart';
 import 'applicationstate.dart';
-import 'lslistwidget.dart';
+import 'LsWidgets/lslistwidget.dart';
 
 class TopicChooserPage extends BasePage {
 
@@ -16,7 +17,7 @@ class TopicChooserPage extends BasePage {
                 future: appState.jsonReader.loadTopics(),
                 builder: (BuildContext context, AsyncSnapshot<dynamic> topics) {
                   if (!topics.hasData) {
-                    return const Text("No data in json!");
+                    return LsWhiteText("No data in json!");
                   }
                   return LsListWidget(data: topics.data, routeName: 'topic');
                 }));
