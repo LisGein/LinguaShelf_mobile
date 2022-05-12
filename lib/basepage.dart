@@ -24,3 +24,4 @@ abstract class BasePage extends StatelessWidget {
     );
   }
 }
+

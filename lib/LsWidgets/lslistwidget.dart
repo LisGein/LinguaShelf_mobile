@@ -15,6 +15,7 @@ class LsListWidget extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         return GestureDetector(
           onTap: () {
+            print("/" + routeName + "/" + data[index].keys.first);
             Navigator.pushNamed(context, "/" + routeName + "/" + data[index].keys.first);
           },
           child: SizedBox(

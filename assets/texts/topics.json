@@ -1,10 +1,6 @@
 {
   "topics": [
-    {"supermarkt": "Супермаркет"},
-    {"difficult": "Сложные ситуации"},
-    {"doctor": "Запись ко врачу"},
-    {"greetings": "Приветствия"},
-    {"apartment": "Аренда квартиры"},
-    {"restaurant": "Ресторан"}
+    {"restaurant_order": "Essen in einem Restaurant bestellen"},
+    {"restaurant_pay": "Bezahlen in einem Restaurant"}
   ]
 }
