@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import 'jsonreader.dart';
+
 class Param {
   String name;
   var value;
@@ -15,9 +17,19 @@ class Param {
 }
 
 class OpenAI {
-  String apiKey;
+  String apiKey = "";
 
-  OpenAI({required this.apiKey});
+  Future<String> readKey() async {
+    if (apiKey.isNotEmpty){return apiKey;}
+    var parsedJson = await JsonReader.loadParsedJson('assets/key.json');
+    if (parsedJson != null && parsedJson["key"] != null) {
+      apiKey = parsedJson["key"].toString();
+      return apiKey;
+    }
+    return apiKey;
+  }
+
+
 
   String getUrl(function, [engine]) {
     List engineList = ['ada', 'babbage', 'curie', 'davinci'];
@@ -36,7 +48,6 @@ class OpenAI {
   Future<String> orderInRestaurant(
     String prompt,
   ) async {
-    String apiKey = this.apiKey;
 
     Map reqData = {
       "model": "davinci",
@@ -74,7 +85,7 @@ class OpenAI {
       "examples_context":
       "I am a highly intelligent question answering bot. The conversation is in German.",
       "documents": [],
-      "max_tokens" : 200
+      "max_tokens" : 100
     };
 
     return QARequest(headers, reqData);
@@ -87,6 +98,13 @@ class OpenAI {
 
   Future<String> request(String authority, String unencodedPath,
       Map<String, String> headers, Map reqData) async {
+
+    if (apiKey.isEmpty) {
+      return "";
+    }
+    print("request:");
+    print(Uri.https(authority, unencodedPath));
+    print(reqData);
     var response = await http
         .post(
           Uri.https(authority, unencodedPath),
@@ -95,6 +113,7 @@ class OpenAI {
         )
         .timeout(const Duration(seconds: 120));
 
+    print("response:");
     print(response.body);
     Map<String, dynamic> map = json.decode(response.body);
     List<dynamic> resp = map["answers"];

@@ -19,7 +19,7 @@ class LsListWidget extends StatelessWidget {
             Navigator.pushNamed(context, "/" + routeName + "/" + data[index].keys.first);
           },
           child: SizedBox(
-              height: 150,
+              height: 75,
               child: Center(
                 child: LsWhiteText(data[index].values.first),
               )),

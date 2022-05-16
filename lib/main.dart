@@ -1,14 +1,13 @@
 import 'package:batut_de/applicationstate.dart';
+import 'package:batut_de/discussionpage.dart';
 import 'package:batut_de/topicchooserpage.dart';
 import 'package:batut_de/chatpage.dart';
 import 'package:batut_de/unknownpage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'opanai.dart';
 
 class MainWidget extends StatelessWidget {
-  final openAI = OpenAI(apiKey: "");
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +32,12 @@ class MainWidget extends StatelessWidget {
         if (uri.pathSegments.length > 1 && uri.pathSegments.first == 'topic') {
           if (uri.pathSegments.length == 2) {
             return MaterialPageRoute(
-                builder: (context) => ChatPage(openAI),
+                builder: (context) => DiscussionPage(topic: uri.pathSegments.last.toString()),
+                settings: settings);
+          }
+          else {
+            return MaterialPageRoute(
+                builder: (context) => ChatPage(),
                 settings: settings);
           }
         }

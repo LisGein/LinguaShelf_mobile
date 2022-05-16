@@ -7,7 +7,7 @@ class JsonReader {
   List<Map<String, String>> topics = [];
 
   Future<List<Map<String, String>>> loadTopics() async {
-    var parsedJson = await _loadParsedJson('assets/texts/topics.json');
+    var parsedJson = await loadParsedJson('assets/texts/topics.json');
 
     if (parsedJson != null && parsedJson['topics'] != null) {
       for (var data in parsedJson['topics']) {
@@ -20,7 +20,7 @@ class JsonReader {
   Future<TaskData> loadDialog(String topic) async {
     var data = TaskData();
 
-    var parsedJson = await _loadParsedJson('assets/texts/tasks.json');
+    var parsedJson = await loadParsedJson('assets/texts/tasks.json');
     if (parsedJson != null && parsedJson[topic] != null
         && parsedJson[topic]["dialogs"] != null) {
 
@@ -53,7 +53,7 @@ class JsonReader {
     return data;
   }
 
-  dynamic _loadParsedJson(String filename) async {
+  static dynamic loadParsedJson(String filename) async {
       String data = await rootBundle.loadString(filename);
       dynamic parsedJson;
       try {
