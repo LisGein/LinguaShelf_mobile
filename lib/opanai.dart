@@ -46,17 +46,17 @@ class OpenAI {
   //Future<String> edit
 
   Future<String> orderInRestaurant(
-    String prompt,
+    String question, String context
   ) async {
 
     Map reqData = {
       "model": "davinci",
-      "question": prompt,
+      "question": question,
       "examples": [
         ["Ich hätte gern eine Cola.", "Eine Cola kommt gleich."]
       ],
       "examples_context":
-          "The following is a conversation with an AI assistant a waitress in a restaurant. The conversation is in German.",
+          "The following is a conversation with an AI assistant a waitress in a restaurant. The conversation is in German. " + context,
       "documents": []
     };
 
@@ -64,6 +64,8 @@ class OpenAI {
       "authorization": "Bearer $apiKey",
       "accept": "application/json",
       "content-type": "application/json",
+      "temperature": "0.5",
+      "max_tokens": "300"
     };
 
     return QARequest(headers, reqData);

@@ -8,9 +8,13 @@ import 'applicationstate.dart';
 import 'opanai.dart';
 
 class ChatPage extends StatefulWidget {
-  ChatPage({required this.firstQuestion});
+  ChatPage({required this.firstQuestion}) {
+    context = "AI: " + firstQuestion + "? ";
+  }
 
   String firstQuestion;
+
+  String context = "";
 
   @override
   _ChatPageState createState() => _ChatPageState();
@@ -20,6 +24,8 @@ class _ChatPageState extends State<ChatPage> {
   final promptController = TextEditingController();
   String generated = "";
   int tokens = 50;
+
+
 
   List<Pair> chat = [];
 
@@ -32,6 +38,8 @@ class _ChatPageState extends State<ChatPage> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
+                  style: Styles.getTextStyle(),
+                  autocorrect: false,
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
                   controller: promptController,
@@ -46,11 +54,13 @@ class _ChatPageState extends State<ChatPage> {
               onPressed: () async {
                 var text = promptController.text;
 
-                String complete = await openAI.orderInRestaurant(text);
+
+                String complete = await openAI.orderInRestaurant(text, widget.context);
                 setState(() {
                   chat.add(Pair("User", text));
                   promptController.clear();
                   chat.add(Pair("AI", complete));
+                  widget.context += "Human: " + text + " AI: " +  complete;
                 });
               },
               child: Text('Send'),
@@ -77,7 +87,10 @@ class _ChatPageState extends State<ChatPage> {
                 alignment: alignment,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(text, style: Styles.getTextStyle(),),
+                  child: Text(
+                    text,
+                    style: Styles.getTextStyle(),
+                  ),
                 ),
                 decoration: new BoxDecoration(
                   gradient: LinearGradient(
@@ -104,74 +117,64 @@ class _ChatPageState extends State<ChatPage> {
     ];
     for (var message in chat) {
       var alignment =
-      message.left == "AI" ? Alignment.topLeft : Alignment.topRight;
-      if (message.right
-          .toString()
-          .isNotEmpty) {
+          message.left == "AI" ? Alignment.topLeft : Alignment.topRight;
+      if (message.right.toString().isNotEmpty) {
         w.add(_messageRectangle(message.right, alignment));
       }
     }
 
-    return
-
-      Container(
-        alignment: Alignment.bottomCenter,
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: [
-                Color.fromARGB(250, 0, 87, 183),
-                Color.fromARGB(250, 252, 136, 3),
-              ],
-            )),
-
-         child: ListView.builder(
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true,
-            itemCount: w.length,
-            itemBuilder: (BuildContext context, int index) {
-              return w[index];
-            }
-
-      ,
-
-    ),
-       );
+    return Container(
+      alignment: Alignment.bottomCenter,
+      decoration: const BoxDecoration(
+          gradient: LinearGradient(
+        begin: Alignment.topRight,
+        end: Alignment.bottomLeft,
+        colors: [
+          Color.fromARGB(250, 0, 87, 183),
+          Color.fromARGB(250, 252, 136, 3),
+        ],
+      )),
+      child: ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: w.length,
+        itemBuilder: (BuildContext context, int index) {
+          return w[index];
+        },
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ApplicationState>(
-        builder: (context, appState, _) {
-            return Container(
-                alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [
-                        Color.fromARGB(250, 0, 87, 183),
-                        Color.fromARGB(250, 252, 136, 3),
-                      ],
-                    )),
-                child: Scaffold(
-                  body: Stack(
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Expanded(
-                            flex: 10,
-                              child: chatViewer()),
-                          Expanded(
-                              flex: 1,child: userInput(appState.openAI)),
-                        ],
-                      ),
-                    ],
-                  ),
+      builder: (context, appState, _) {
+        return Container(
+          alignment: Alignment.center,
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+              Color.fromARGB(250, 0, 87, 183),
+              Color.fromARGB(250, 252, 136, 3),
+            ],
+          )),
+          child: Scaffold(
+            body: Stack(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Expanded(flex: 10, child: chatViewer()),
+                    userInput(appState.openAI),
+                  ],
                 ),
-              );},
-            );
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }
