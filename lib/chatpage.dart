@@ -113,17 +113,31 @@ class _ChatPageState extends State<ChatPage> {
     }
 
     return
-       ListView.builder(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-          itemCount: w.length,
-          itemBuilder: (BuildContext context, int index) {
-            return w[index];
-          }
+
+      Container(
+        alignment: Alignment.bottomCenter,
+        decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [
+                Color.fromARGB(250, 0, 87, 183),
+                Color.fromARGB(250, 252, 136, 3),
+              ],
+            )),
+
+         child: ListView.builder(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+            itemCount: w.length,
+            itemBuilder: (BuildContext context, int index) {
+              return w[index];
+            }
 
       ,
 
-    );
+    ),
+       );
   }
 
   @override
@@ -141,13 +155,21 @@ class _ChatPageState extends State<ChatPage> {
                         Color.fromARGB(250, 252, 136, 3),
                       ],
                     )),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    chatViewer(),
-                    userInput(appState.openAI),
-                    Text(generated),
-                  ],
+                child: Scaffold(
+                  body: Stack(
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Expanded(
+                            flex: 10,
+                              child: chatViewer()),
+                          Expanded(
+                              flex: 1,child: userInput(appState.openAI)),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               );},
             );
