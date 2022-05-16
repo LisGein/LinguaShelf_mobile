@@ -29,7 +29,11 @@ class ApplicationState extends ChangeNotifier {
     List<String> listOfTopics = topics.split("\n");
     List<Map<String, String>> data = [];
     for (var topic in listOfTopics) {
-      data.add({listOfTopics.indexOf(topic).toString(): topic});
+      var strParts = topic.split(".");
+      if (strParts.length > 1) {
+        var question = strParts[1].trim();
+        data.add({question: question});
+      }
     }
 
     return data;
