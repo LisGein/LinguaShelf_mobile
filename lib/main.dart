@@ -37,7 +37,7 @@ class MainWidget extends StatelessWidget {
           }
           else {
             return MaterialPageRoute(
-                builder: (context) => ChatPage(),
+                builder: (context) => ChatPage(firstQuestion: uri.pathSegments.last.toString()),
                 settings: settings);
           }
         }
