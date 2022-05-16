@@ -4,11 +4,11 @@ import 'package:batut_de/tasksdata.dart';
 import 'package:flutter/services.dart';
 
 class JsonReader {
-  List<Map<String, String>> topics = [];
 
   Future<List<Map<String, String>>> loadTopics() async {
     var parsedJson = await loadParsedJson('assets/texts/topics.json');
 
+    List<Map<String, String>> topics = [];
     if (parsedJson != null && parsedJson['topics'] != null) {
       for (var data in parsedJson['topics']) {
         topics.add(Map.from(data).cast());
