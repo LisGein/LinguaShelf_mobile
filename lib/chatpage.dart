@@ -5,11 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'applicationstate.dart';
-import 'opanai.dart';
+import 'openai/chatmessagestyle.dart';
+import 'openai/opanai.dart';
+
+
 
 class ChatPage extends StatefulWidget {
   ChatPage({required this.firstQuestion}) {
-    context = "AI: " + firstQuestion + "? ";
+    firstQuestion += "? ";
+    context = "Kellnerin: " + firstQuestion;
   }
 
   String firstQuestion;
@@ -25,9 +29,24 @@ class _ChatPageState extends State<ChatPage> {
   String generated = "";
   int tokens = 50;
 
+  List<ChatMessageStyle> chat = [];
 
-
-  List<Pair> chat = [];
+  void correctMessage(OpenAI openAI, String text, int messageIndex) async {
+    String corrections = await openAI.editMessage(text);
+    var pair = Pair(Styles.getTextStyle(fontStyle: FontStyle.italic, color: Color.fromARGB(255, 91, 92, 94)), "\n___________\n\'\'" + corrections + "\'\'");
+    setState(() {
+      if (chat[messageIndex].styleToText.length == 2) {
+        chat[messageIndex].styleToText[1] = pair;
+      }
+      else if (chat[messageIndex].styleToText.length == 1) {
+        chat[messageIndex].styleToText.add(pair);
+      }
+      else {
+        print("Unexpected number of chat messages! Length: " +
+            chat[messageIndex].styleToText.length.toString());
+      }
+    });
+  }
 
   Widget userInput(OpenAI openAI) {
     return Card(
@@ -54,13 +73,15 @@ class _ChatPageState extends State<ChatPage> {
               onPressed: () async {
                 var text = promptController.text;
 
+                String complete =
+                    await openAI.orderInRestaurant(text, widget.context);
 
-                String complete = await openAI.orderInRestaurant(text, widget.context);
                 setState(() {
-                  chat.add(Pair("User", text));
+                  chat.add(ChatMessageStyle(sender: Sender.User, styleToText: [Pair(Styles.getTextStyle(), text)]));
+                  correctMessage(openAI, text, chat.length - 1);
                   promptController.clear();
-                  chat.add(Pair("AI", complete));
-                  widget.context += "Human: " + text + " AI: " +  complete;
+                  chat.add(ChatMessageStyle(sender: Sender.AI, styleToText: [Pair(Styles.getTextStyle(), complete)]));
+                  widget.context += "Besucher: " + text + ". Kellnerin: " + complete;
                 });
               },
               child: Text('Send'),
@@ -73,7 +94,17 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Widget _messageRectangle(String text, Alignment alignment) {
+  Widget _messageRectangle(List<Pair> texts, Sender sender) {
+    var alignment =
+        sender == Sender.AI ? Alignment.topLeft : Alignment.topRight;
+
+    List<Text> messageParts = [];
+
+    for (var text in texts) {
+      messageParts.add(Text(text.right, style: text.left));
+      print(text.left);
+    }
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -87,12 +118,11 @@ class _ChatPageState extends State<ChatPage> {
                 alignment: alignment,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    text,
-                    style: Styles.getTextStyle(),
+                  child: Column(
+                    children: messageParts
                   ),
                 ),
-                decoration: new BoxDecoration(
+                decoration: BoxDecoration(
                   gradient: LinearGradient(
                       begin: Alignment.topRight,
                       end: Alignment.bottomLeft,
@@ -112,14 +142,10 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget chatViewer() {
-    List<Widget> w = [
-      _messageRectangle(widget.firstQuestion, Alignment.topLeft)
-    ];
-    for (var message in chat) {
-      var alignment =
-          message.left == "AI" ? Alignment.topLeft : Alignment.topRight;
-      if (message.right.toString().isNotEmpty) {
-        w.add(_messageRectangle(message.right, alignment));
+    List<Widget> w = [_messageRectangle([Pair(Styles.getTextStyle(), widget.firstQuestion)], Sender.AI)];
+    for (var textSettings in chat) {
+      if (textSettings.styleToText.isNotEmpty) {
+        w.add(_messageRectangle(textSettings.styleToText, textSettings.sender));
       }
     }
 

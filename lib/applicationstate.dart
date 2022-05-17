@@ -2,7 +2,7 @@ import 'package:batut_de/tasksdata.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'jsonreader.dart';
-import 'opanai.dart';
+import 'openai/opanai.dart';
 
 class ApplicationState extends ChangeNotifier {
   ApplicationState(){

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import 'jsonreader.dart';
+import '../jsonreader.dart';
 
 class Param {
   String name;
@@ -43,7 +43,27 @@ class OpenAI {
     return url;
   }
 
-  //Future<String> edit
+  Future<String> editMessage(String text) async {
+    Map reqData = {
+      "input": text,
+      "instruction": "Korrigieren Sie die Grammatik und Rechtschreibung"
+    };
+
+
+    var headers = {
+      "authorization": "Bearer $apiKey",
+      "accept": "application/json",
+      "content-type": "application/json",
+      "max_tokens": "100"
+    };
+
+/*    String engine = await updateListOfEngines("api.openai.com", "v1/engines", {
+    "authorization": "Bearer $apiKey",
+    "accept": "application/json",
+    "content-type": "application/json",
+      "max_tokens": "5000"});*/
+    return await correctionRequest("api.openai.com", "v1/engines/text-davinci-edit-001/edits", headers, reqData);
+  }
 
   Future<String> orderInRestaurant(
     String question, String context
@@ -60,6 +80,7 @@ class OpenAI {
       "documents": []
     };
 
+
     var headers = {
       "authorization": "Bearer $apiKey",
       "accept": "application/json",
@@ -67,6 +88,7 @@ class OpenAI {
       "temperature": "0.5",
       "max_tokens": "300"
     };
+
 
     return QARequest(headers, reqData);
   }
@@ -95,10 +117,14 @@ class OpenAI {
 
 
   Future<String> QARequest(Map<String, String> headers, Map reqData) async {
-    return await request("api.openai.com", "v1/answers", headers, reqData);
+    return await questionRequest("api.openai.com", "v1/answers", headers, reqData);
   }
 
-  Future<String> request(String authority, String unencodedPath,
+  Future<String> CompletionsRequest(Map<String, String> headers, Map reqData) async {
+    return await correctionRequest("api.openai.com", "v1/engines/text-davinci-002/completions", headers, reqData);
+  }
+
+  Future<String> questionRequest(String authority, String unencodedPath,
       Map<String, String> headers, Map reqData) async {
 
     if (apiKey.isEmpty) {
@@ -109,10 +135,10 @@ class OpenAI {
     print(reqData);
     var response = await http
         .post(
-          Uri.https(authority, unencodedPath),
-          headers: headers,
-          body: jsonEncode(reqData),
-        )
+      Uri.https(authority, unencodedPath),
+      headers: headers,
+      body: jsonEncode(reqData),
+    )
         .timeout(const Duration(seconds: 120));
 
     print("response:");
@@ -120,5 +146,45 @@ class OpenAI {
     Map<String, dynamic> map = json.decode(response.body);
     List<dynamic> resp = map["answers"];
     return resp[0];
+  }
+
+  Future<String> correctionRequest(String authority, String unencodedPath,
+      Map<String, String> headers, Map reqData) async {
+
+    if (apiKey.isEmpty) {
+      return "";
+    }
+    print("request:");
+    print(Uri.https(authority, unencodedPath));
+    print(reqData);
+    var response = await http
+        .post(
+      Uri.https(authority, unencodedPath),
+      headers: headers,
+      body: jsonEncode(reqData),
+    )
+        .timeout(const Duration(seconds: 120));
+
+    print("response:");
+    print(response.body);
+    Map<String, dynamic> map = json.decode(response.body);
+    List<dynamic> resp = map["choices"];
+    return resp[0]["text"];
+  }
+
+  Future<String> updateListOfEngines(String authority, String unencodedPath, Map<String, String> headers) async {
+    var response = await http
+        .get(
+      Uri.https(authority, unencodedPath),
+      headers: headers
+    )
+        .timeout(const Duration(seconds: 120));
+
+    print("response:");
+    print(response.body);
+    Map<String, dynamic> map = json.decode(response.body);
+    List<dynamic> resp = map["data"];
+
+    return resp[0]["id"];
   }
 }
