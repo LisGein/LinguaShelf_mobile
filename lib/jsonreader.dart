@@ -1,17 +1,21 @@
 import 'dart:convert';
 
+import 'package:batut_de/pair.dart';
 import 'package:batut_de/tasksdata.dart';
 import 'package:flutter/services.dart';
 
 class JsonReader {
 
-  Future<List<Map<String, String>>> loadTopics() async {
+  Future<List<Pair>> loadTopics() async {
     var parsedJson = await loadParsedJson('assets/texts/topics.json');
 
-    List<Map<String, String>> topics = [];
+    List<Pair> topics = [];
     if (parsedJson != null && parsedJson['topics'] != null) {
       for (var data in parsedJson['topics']) {
-        topics.add(Map.from(data).cast());
+        var parsed = Map.from(data).cast();
+        for (var parsedPair in parsed.entries) {
+          topics.add(Pair(parsedPair.key, parsedPair.value));
+        }
       }
     }
     return topics;

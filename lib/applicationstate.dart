@@ -1,4 +1,5 @@
 import 'package:batut_de/tasksdata.dart';
+import 'package:batut_de/topic.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'jsonreader.dart';
@@ -24,18 +25,8 @@ class ApplicationState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<Map<String, String>>> loadTopicsOfDiscussion() async {
-    String topics = await openAI.startOfOrderInRestaurant();
-    List<String> listOfTopics = topics.split("\n");
-    List<Map<String, String>> data = [];
-    for (var topic in listOfTopics) {
-      var strParts = topic.split(".");
-      if (strParts.length > 1) {
-        var question = strParts[1].trim();
-        data.add({question: question});
-      }
-    }
-
-    return data;
+  Future<String> loadTopicsOfDiscussion(Topic topic) async {
+    String topics = await openAI.startOfDiscussion(topic);
+    return topics;
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../pair.dart';
 import '../styles.dart';
 
 
@@ -20,6 +21,7 @@ class LsText extends StatelessWidget {
 
 
 class LsWhiteText extends LsText {
+  LsWhiteText.pair(Pair text) : super(text.right, style: Styles.getTextStyle(color: Colors.white));
   LsWhiteText(String text) : super(text, style: Styles.getTextStyle(color: Colors.white));
 
 }

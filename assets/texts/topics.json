@@ -1,6 +1,6 @@
 {
   "topics": [
-    {"restaurant_order": "Essen in einem Restaurant bestellen"},
-    {"restaurant_pay": "Bezahlen in einem Restaurant"}
+    {"call_doctor": "Einen Termin beim Arzt"},
+    {"call_plumber": "Ein verstopftes Waschbecken"}
   ]
 }

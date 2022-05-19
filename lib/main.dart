@@ -1,14 +1,15 @@
 import 'package:batut_de/applicationstate.dart';
-import 'package:batut_de/discussionpage.dart';
+import 'package:batut_de/pair.dart';
+import 'package:batut_de/topic.dart';
 import 'package:batut_de/topicchooserpage.dart';
 import 'package:batut_de/chatpage.dart';
 import 'package:batut_de/unknownpage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'LsWidgets/lslistwidget.dart';
 
 class MainWidget extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     const mainBlueColor = Color.fromARGB(255, 135, 174, 207);
@@ -29,17 +30,23 @@ class MainWidget extends StatelessWidget {
         }
 
         var uri = Uri.parse(settings.name!);
-        if (uri.pathSegments.length > 1 && uri.pathSegments.first == 'topic') {
-          if (uri.pathSegments.length == 2) {
-            return MaterialPageRoute(
-                builder: (context) => DiscussionPage(topic: uri.pathSegments.last.toString()),
-                settings: settings);
-          }
-          else {
-            return MaterialPageRoute(
-                builder: (context) => ChatPage(firstQuestion: uri.pathSegments.last.toString()),
-                settings: settings);
-          }
+        if (uri.pathSegments.length == 2 && uri.pathSegments.first == 'topic') {
+          return MaterialPageRoute(
+              builder: (context) => Consumer<ApplicationState>(
+                  builder: (context, appState, _) => FutureBuilder<dynamic>(
+                      future: appState.loadTopicsOfDiscussion(
+                          strToEnum(uri.pathSegments.last.toString())),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<dynamic> topics) {
+                        if (!topics.hasData) {
+                          return LsListWidget(
+                              data: [Pair("loading", "loading...")],
+                              routeName: '');
+                        } else {
+                          return ChatPage(firstQuestion: topics.data);
+                        }
+                      })),
+              settings: settings);
         }
 
         return MaterialPageRoute(

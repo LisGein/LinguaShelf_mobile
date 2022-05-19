@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../jsonreader.dart';
+import '../topic.dart';
 
 class Param {
   String name;
@@ -28,8 +29,6 @@ class OpenAI {
     }
     return apiKey;
   }
-
-
 
   String getUrl(function, [engine]) {
     List engineList = ['ada', 'babbage', 'curie', 'davinci'];
@@ -66,8 +65,8 @@ class OpenAI {
   }
 
   Future<String> orderInRestaurant(
-    String question, String context
-  ) async {
+      String question, String context
+      ) async {
 
     Map reqData = {
       "model": "davinci",
@@ -76,7 +75,7 @@ class OpenAI {
         ["Ich hätte gern eine Cola.", "Eine Cola kommt gleich."]
       ],
       "examples_context":
-          "The following is a conversation with an AI assistant a waitress in a restaurant. The conversation is in German. " + context,
+      "The following is a conversation with an AI assistant a waitress in a restaurant. The conversation is in German. " + context,
       "documents": []
     };
 
@@ -93,7 +92,7 @@ class OpenAI {
     return QARequest(headers, reqData);
   }
 
-  Future<String> startOfOrderInRestaurant() async {
+  Future<String> startOfDiscussion(Topic topic) async {
     var headers = {
       "authorization": "Bearer $apiKey",
       "accept": "application/json",
@@ -102,9 +101,33 @@ class OpenAI {
 
     Map reqData = {
       "model": "davinci",
-      "question": "Generate 5 posible questions that waitresses typically ask customers if they would like something to drink.",
+      "question": "Generate 5 possible conversation starters when a client calls the clinic to make an appointment.",
       "examples": [
-        ["Guten Tag! Kann ich Ihnen helfen?", "Möchten Sie etwas zu trinken haben?"]
+        ["Praxis, guten Tag. Was kann ich für Sie tun?", "Hallo, Praxis XY. Was kann ich für Sie tun?"]
+      ],
+      "examples_context":
+      "I am a highly intelligent question answering bot. The conversation is in German.",
+      "documents": [],
+      "max_tokens" : 100
+    };
+
+    String str = await QARequest(headers, reqData);
+    return str;
+  }
+
+
+  Future<String> startOfCallToDoctor() async {
+    var headers = {
+      "authorization": "Bearer $apiKey",
+      "accept": "application/json",
+      "content-type": "application/json",
+    };
+
+    Map reqData = {
+      "model": "davinci",
+      "question": "Generate 5 possible conversation starters when a client calls the clinic to make an appointment.",
+      "examples": [
+        ["Praxis, guten Tag. Was kann ich für Sie tun?", "Hallo, Praxis XY. Was kann ich für Sie tun?"]
       ],
       "examples_context":
       "I am a highly intelligent question answering bot. The conversation is in German.",
