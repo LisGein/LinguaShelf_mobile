@@ -12,8 +12,7 @@ import 'openai/opanai.dart';
 
 class ChatPage extends StatefulWidget {
   ChatPage({required this.firstQuestion}) {
-    firstQuestion += "? ";
-    context = "Kellnerin: " + firstQuestion;
+    context = firstQuestion;
   }
 
   String firstQuestion;
@@ -73,15 +72,15 @@ class _ChatPageState extends State<ChatPage> {
               onPressed: () async {
                 var text = promptController.text;
 
+                widget.context += " Der Benutzer antwortet: " + text + ". ";
                 String complete =
-                    await openAI.orderInRestaurant(text, widget.context);
-
+                await openAI.callWithPlumber(widget.context);
+                widget.context += complete;
                 setState(() {
                   chat.add(ChatMessageStyle(sender: Sender.User, styleToText: [Pair(Styles.getTextStyle(), text)]));
                   correctMessage(openAI, text, chat.length - 1);
                   promptController.clear();
                   chat.add(ChatMessageStyle(sender: Sender.AI, styleToText: [Pair(Styles.getTextStyle(), complete)]));
-                  widget.context += "Besucher: " + text + ". Kellnerin: " + complete;
                 });
               },
               child: Text('Send'),

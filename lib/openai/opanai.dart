@@ -92,7 +92,11 @@ class OpenAI {
     return QARequest(headers, reqData);
   }
 
-  Future<String> startOfDiscussion(Topic topic) async {
+
+  Future<String> callWithPlumber(
+      String context
+      ) async {
+
     var headers = {
       "authorization": "Bearer $apiKey",
       "accept": "application/json",
@@ -100,23 +104,29 @@ class OpenAI {
     };
 
     Map reqData = {
-      "model": "davinci",
-      "question": "Generate 5 possible conversation starters when a client calls the clinic to make an appointment.",
-      "examples": [
-        ["Praxis, guten Tag. Was kann ich für Sie tun?", "Hallo, Praxis XY. Was kann ich für Sie tun?"]
-      ],
-      "examples_context":
-      "I am a highly intelligent question answering bot. The conversation is in German.",
-      "documents": [],
-      "max_tokens" : 100
+      "prompt": context,
+      "max_tokens" : 150,
+      "temperature" : 1,
+      "presence_penalty" : 0,
+      "frequency_penalty" : 0
     };
 
-    String str = await QARequest(headers, reqData);
-    return str;
+    return CompletionsRequest(headers, reqData);
+  }
+
+  Future<String> startOfDiscussion(Topic topic) async {
+    switch (topic) {
+      case Topic.CallDoctor:
+        return await _startOfCallToDoctor();
+      case Topic.CallPlumber:
+        return await _startOfCallToPlumber();
+      default:
+        return await _startOfGeneralConversation();
+    }
   }
 
 
-  Future<String> startOfCallToDoctor() async {
+  Future<String> _startOfGeneralConversation() async {
     var headers = {
       "authorization": "Bearer $apiKey",
       "accept": "application/json",
@@ -138,6 +148,67 @@ class OpenAI {
     return QARequest(headers, reqData);
   }
 
+  Future<String> _startOfCallToDoctor() async {
+    var headers = {
+      "authorization": "Bearer $apiKey",
+      "accept": "application/json",
+      "content-type": "application/json",
+    };
+
+    Map reqData = {
+      "model": "davinci",
+      "question": "Generate 5 possible conversation starters when a client calls the clinic to make an appointment.",
+      "examples": [
+        ["Praxis, guten Tag. Was kann ich für Sie tun?", "Hallo, Praxis XY. Was kann ich für Sie tun?"]
+      ],
+      "examples_context":
+      "I am a highly intelligent question answering bot. The conversation is in German.",
+      "documents": [],
+      "max_tokens" : 100
+    };
+
+    return QARequest(headers, reqData);
+  }
+
+  Future<String> _startOfCallToPlumber() async {
+    var headers = {
+      "authorization": "Bearer $apiKey",
+      "accept": "application/json",
+      "content-type": "application/json",
+    };
+    String str = "Der Nutzer lebt in Deutschland. Der Benutzer hat ein verstopftes Waschbecken. Der Benutzer ruft einen Klempner an. Der Klempner antwortet auf Deutsch:";
+    Map reqData = {
+      "prompt": str,
+      "max_tokens" : 150,
+      "temperature" : 0.7,
+    };
+
+    str += await CompletionsRequest(headers, reqData);
+
+    return str;
+  }
+
+  Future<String> startOfOrderInRestaurant() async {
+    var headers = {
+      "authorization": "Bearer $apiKey",
+      "accept": "application/json",
+      "content-type": "application/json",
+    };
+
+    Map reqData = {
+      "model": "davinci",
+      "question": "Generate 5 possible questions that waitresses typically ask customers if they would like something to drink.",
+      "examples": [
+        ["Guten Tag! Kann ich Ihnen helfen?", "Möchten Sie etwas zu trinken haben?"]
+      ],
+      "examples_context":
+      "I am a highly intelligent question answering bot. The conversation is in German.",
+      "documents": [],
+      "max_tokens" : 100
+    };
+
+    return QARequest(headers, reqData);
+  }
 
   Future<String> QARequest(Map<String, String> headers, Map reqData) async {
     return await questionRequest("api.openai.com", "v1/answers", headers, reqData);
@@ -153,7 +224,7 @@ class OpenAI {
     if (apiKey.isEmpty) {
       return "";
     }
-    print("request:");
+    print("question request:");
     print(Uri.https(authority, unencodedPath));
     print(reqData);
     var response = await http
@@ -164,7 +235,7 @@ class OpenAI {
     )
         .timeout(const Duration(seconds: 120));
 
-    print("response:");
+    print("question response:");
     print(response.body);
     Map<String, dynamic> map = json.decode(response.body);
     List<dynamic> resp = map["answers"];
@@ -177,7 +248,7 @@ class OpenAI {
     if (apiKey.isEmpty) {
       return "";
     }
-    print("request:");
+    print("correction request:");
     print(Uri.https(authority, unencodedPath));
     print(reqData);
     var response = await http
@@ -188,7 +259,7 @@ class OpenAI {
     )
         .timeout(const Duration(seconds: 120));
 
-    print("response:");
+    print("correction response:");
     print(response.body);
     Map<String, dynamic> map = json.decode(response.body);
     List<dynamic> resp = map["choices"];
@@ -203,7 +274,7 @@ class OpenAI {
     )
         .timeout(const Duration(seconds: 120));
 
-    print("response:");
+    print("update response:");
     print(response.body);
     Map<String, dynamic> map = json.decode(response.body);
     List<dynamic> resp = map["data"];
