@@ -1,5 +1,4 @@
 import 'package:batut_de/applicationstate.dart';
-import 'package:batut_de/pair.dart';
 import 'package:batut_de/topic.dart';
 import 'package:batut_de/topicchooserpage.dart';
 import 'package:batut_de/chatpage.dart';
@@ -7,7 +6,7 @@ import 'package:batut_de/unknownpage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'LsWidgets/lslistwidget.dart';
+import 'loadingpage.dart';
 
 class MainWidget extends StatelessWidget {
   @override
@@ -39,9 +38,7 @@ class MainWidget extends StatelessWidget {
                       builder: (BuildContext context,
                           AsyncSnapshot<dynamic> topics) {
                         if (!topics.hasData) {
-                          return LsListWidget(
-                              data: [Pair("loading", "loading...")],
-                              routeName: '');
+                          return LoadingPage();
                         } else {
                           return ChatPage(firstQuestion: topics.data);
                         }
