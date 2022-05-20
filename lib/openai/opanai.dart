@@ -2,33 +2,10 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../jsonreader.dart';
 import '../topic.dart';
-
-class Param {
-  String name;
-  var value;
-
-  Param(this.name, this.value);
-
-  @override
-  String toString() {
-    return '{ ${this.name}, ${this.value} }';
-  }
-}
 
 class OpenAI {
   String apiKey = "";
-
-  Future<String> readKey() async {
-    if (apiKey.isNotEmpty){return apiKey;}
-    var parsedJson = await JsonReader.loadParsedJson('assets/key.json');
-    if (parsedJson != null && parsedJson["key"] != null) {
-      apiKey = parsedJson["key"].toString();
-      return apiKey;
-    }
-    return apiKey;
-  }
 
   String getUrl(function, [engine]) {
     List engineList = ['ada', 'babbage', 'curie', 'davinci'];
@@ -186,28 +163,6 @@ class OpenAI {
     str += await CompletionsRequest(headers, reqData);
 
     return str;
-  }
-
-  Future<String> startOfOrderInRestaurant() async {
-    var headers = {
-      "authorization": "Bearer $apiKey",
-      "accept": "application/json",
-      "content-type": "application/json",
-    };
-
-    Map reqData = {
-      "model": "davinci",
-      "question": "Generate 5 possible questions that waitresses typically ask customers if they would like something to drink.",
-      "examples": [
-        ["Guten Tag! Kann ich Ihnen helfen?", "Möchten Sie etwas zu trinken haben?"]
-      ],
-      "examples_context":
-      "I am a highly intelligent question answering bot. The conversation is in German.",
-      "documents": [],
-      "max_tokens" : 100
-    };
-
-    return QARequest(headers, reqData);
   }
 
   Future<String> QARequest(Map<String, String> headers, Map reqData) async {

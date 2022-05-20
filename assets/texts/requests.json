@@ -1,0 +1,10 @@
+{
+  "requests": [
+    {"call_doctor": {
+      "prompt": "Der Nutzer lebt in Deutschland. Der Benutzer hat die Grippe. Der Benutzer ruft die Klinik an. Die Rezeptionistin antwortet auf Deutsch:"
+    }},
+    {"call_plumber": {
+      "prompt" : "Der Nutzer lebt in Deutschland. Der Benutzer hat ein verstopftes Waschbecken. Der Benutzer ruft einen Klempner an. Der Klempner antwortet auf Deutsch:"
+    }}
+  ]
+}

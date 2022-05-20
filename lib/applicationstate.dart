@@ -6,7 +6,7 @@ import 'jsonreader.dart';
 import 'openai/opanai.dart';
 
 class ApplicationState extends ChangeNotifier {
-  ApplicationState(){
+  ApplicationState() {
     _loadOpenAIKey();
   }
 
@@ -14,14 +14,36 @@ class ApplicationState extends ChangeNotifier {
   Future<TaskData>? currentTaskData;
 
   var openAI = OpenAI();
+  String apiKey = "";
 
   void loadDialog(String topic) {
     currentTaskData = jsonReader.loadDialog(topic);
-    //notifyListeners();
+  }
+
+  Future<void> _readKey() async {
+    if (apiKey.isNotEmpty) {
+      return;
+    }
+    var parsedJson = await JsonReader.loadParsedJson('assets/key.json');
+    if (parsedJson != null && parsedJson["key"] != null) {
+      apiKey = parsedJson["key"].toString();
+    }
+  }
+
+  Future<void> _readRequestsFile() async {
+    var parsedJson = await JsonReader.loadParsedJson('assets/requests.json');
+    if (parsedJson != null && parsedJson["requests"] != null) {
+
+    }
+  }
+
+  Future<void> _loadDataForAI() async {
+    _readKey();
+    _readRequestsFile();
   }
 
   void _loadOpenAIKey() async {
-    await openAI.readKey();
+    await _loadDataForAI();
     notifyListeners();
   }
 
