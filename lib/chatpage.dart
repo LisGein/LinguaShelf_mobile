@@ -8,8 +8,6 @@ import 'applicationstate.dart';
 import 'openai/chatmessagestyle.dart';
 import 'openai/opanai.dart';
 
-
-
 class ChatPage extends StatefulWidget {
   ChatPage({required this.firstQuestion}) {
     context = firstQuestion;
@@ -32,15 +30,17 @@ class _ChatPageState extends State<ChatPage> {
 
   void correctMessage(OpenAI openAI, String text, int messageIndex) async {
     String corrections = await openAI.editMessage(text);
-    var pair = Pair(Styles.getTextStyle(fontStyle: FontStyle.italic, color: Color.fromARGB(255, 91, 92, 94)), "\n___________\n\'\'" + corrections + "\'\'");
+    var pair = Pair(
+        Styles.getTextStyle(
+            fontStyle: FontStyle.italic,
+            color: Color.fromARGB(255, 91, 92, 94)),
+        "\n___________\n\'\'" + corrections + "\'\'");
     setState(() {
       if (chat[messageIndex].styleToText.length == 2) {
         chat[messageIndex].styleToText[1] = pair;
-      }
-      else if (chat[messageIndex].styleToText.length == 1) {
+      } else if (chat[messageIndex].styleToText.length == 1) {
         chat[messageIndex].styleToText.add(pair);
-      }
-      else {
+      } else {
         print("Unexpected number of chat messages! Length: " +
             chat[messageIndex].styleToText.length.toString());
       }
@@ -73,14 +73,17 @@ class _ChatPageState extends State<ChatPage> {
                 var text = promptController.text;
 
                 widget.context += " Der Benutzer antwortet: " + text + ". ";
-                String complete =
-                await openAI.callWithPlumber(widget.context);
+                String complete = await openAI.callWithPlumber(widget.context);
                 widget.context += complete;
                 setState(() {
-                  chat.add(ChatMessageStyle(sender: Sender.User, styleToText: [Pair(Styles.getTextStyle(), text)]));
+                  chat.add(ChatMessageStyle(
+                      sender: Sender.User,
+                      styleToText: [Pair(Styles.getTextStyle(), text)]));
                   correctMessage(openAI, text, chat.length - 1);
                   promptController.clear();
-                  chat.add(ChatMessageStyle(sender: Sender.AI, styleToText: [Pair(Styles.getTextStyle(), complete)]));
+                  chat.add(ChatMessageStyle(
+                      sender: Sender.AI,
+                      styleToText: [Pair(Styles.getTextStyle(), complete)]));
                 });
               },
               child: Text('Send'),
@@ -117,9 +120,7 @@ class _ChatPageState extends State<ChatPage> {
                 alignment: alignment,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: messageParts
-                  ),
+                  child: Column(children: messageParts),
                 ),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
@@ -141,7 +142,10 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget chatViewer() {
-    List<Widget> w = [_messageRectangle([Pair(Styles.getTextStyle(), widget.firstQuestion)], Sender.AI)];
+    List<Widget> w = [
+      _messageRectangle(
+          [Pair(Styles.getTextStyle(), widget.firstQuestion)], Sender.AI)
+    ];
     for (var textSettings in chat) {
       if (textSettings.styleToText.isNotEmpty) {
         w.add(_messageRectangle(textSettings.styleToText, textSettings.sender));
@@ -192,7 +196,7 @@ class _ChatPageState extends State<ChatPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Expanded(flex: 10, child: chatViewer()),
-                    userInput(appState.openAI),
+                    if (appState.openAI != null) userInput(appState.openAI!),
                   ],
                 ),
               ],

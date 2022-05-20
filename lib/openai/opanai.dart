@@ -2,10 +2,15 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import '../requests.dart';
 import '../topic.dart';
 
 class OpenAI {
-  String apiKey = "";
+  OpenAI({required this.apiKey, required this.requests});
+
+  String apiKey;
+
+  Requests requests;
 
   String getUrl(function, [engine]) {
     List engineList = ['ada', 'babbage', 'curie', 'davinci'];

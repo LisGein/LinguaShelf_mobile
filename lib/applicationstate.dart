@@ -1,3 +1,5 @@
+import 'package:batut_de/pair.dart';
+import 'package:batut_de/requests.dart';
 import 'package:batut_de/tasksdata.dart';
 import 'package:batut_de/topic.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,42 +15,47 @@ class ApplicationState extends ChangeNotifier {
   var jsonReader = JsonReader();
   Future<TaskData>? currentTaskData;
 
-  var openAI = OpenAI();
-  String apiKey = "";
+  OpenAI? openAI;
 
   void loadDialog(String topic) {
     currentTaskData = jsonReader.loadDialog(topic);
   }
 
-  Future<void> _readKey() async {
-    if (apiKey.isNotEmpty) {
-      return;
-    }
+  Future<String> _readKey() async {
     var parsedJson = await JsonReader.loadParsedJson('assets/key.json');
     if (parsedJson != null && parsedJson["key"] != null) {
-      apiKey = parsedJson["key"].toString();
+      return parsedJson["key"].toString();
     }
+    return "";
   }
 
-  Future<void> _readRequestsFile() async {
-    var parsedJson = await JsonReader.loadParsedJson('assets/requests.json');
+  Future<Requests?> _readRequestsFile() async {
+    var parsedJson = await JsonReader.loadParsedJson('assets/texts/requests.json');
     if (parsedJson != null && parsedJson["requests"] != null) {
-
+      return Requests(parsedJson["requests"]);
     }
+    return null;
   }
 
-  Future<void> _loadDataForAI() async {
-    _readKey();
-    _readRequestsFile();
+  Future<Pair> _loadDataForAI() async {
+    String key = await _readKey();
+    Requests? requests = await _readRequestsFile();
+
+    return Pair(key, requests);
   }
 
   void _loadOpenAIKey() async {
-    await _loadDataForAI();
-    notifyListeners();
+    var pair = await _loadDataForAI();
+    if (pair.right != null) {
+      openAI = OpenAI(apiKey: pair.left, requests: pair.right);
+      notifyListeners();
+    }
   }
 
   Future<String> loadTopicsOfDiscussion(Topic topic) async {
-    String topics = await openAI.startOfDiscussion(topic);
-    return topics;
+    if (openAI != null) {
+      return await openAI!.startOfDiscussion(topic);
+    }
+    return "OpenAI is not loaded!";
   }
 }
