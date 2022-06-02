@@ -1,5 +1,5 @@
-import 'package:batut_de/pair.dart';
-import 'package:batut_de/styles.dart';
+import 'package:LinguaShelf_mobile/pair.dart';
+import 'package:LinguaShelf_mobile/styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

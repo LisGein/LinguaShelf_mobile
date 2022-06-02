@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.batut_de">
+    package="com.example.LinguaShelf_mobile">
    <application
-        android:label="batut_de"
+        android:label="LinguaShelf_mobile"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

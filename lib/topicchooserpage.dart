@@ -1,4 +1,4 @@
-import 'package:batut_de/LsWidgets/lstext.dart';
+import 'package:LinguaShelf_mobile/LsWidgets/lstext.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

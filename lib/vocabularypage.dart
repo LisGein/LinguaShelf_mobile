@@ -1,6 +1,6 @@
-import 'package:batut_de/LsWidgets/lstext.dart';
-import 'package:batut_de/basepage.dart';
-import 'package:batut_de/words/writewordpage.dart';
+import 'package:LinguaShelf_mobile/LsWidgets/lstext.dart';
+import 'package:LinguaShelf_mobile/basepage.dart';
+import 'package:LinguaShelf_mobile/words/writewordpage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';

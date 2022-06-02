@@ -1,4 +1,4 @@
-import 'package:batut_de/topic.dart';
+import 'package:LinguaShelf_mobile/topic.dart';
 
 class Requests {
   Requests(Map<dynamic, dynamic> json) {

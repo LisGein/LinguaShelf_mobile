@@ -1,8 +1,8 @@
-import 'package:batut_de/applicationstate.dart';
-import 'package:batut_de/topic.dart';
-import 'package:batut_de/topicchooserpage.dart';
-import 'package:batut_de/chatpage.dart';
-import 'package:batut_de/unknownpage.dart';
+import 'package:LinguaShelf_mobile/applicationstate.dart';
+import 'package:LinguaShelf_mobile/topic.dart';
+import 'package:LinguaShelf_mobile/topicchooserpage.dart';
+import 'package:LinguaShelf_mobile/chatpage.dart';
+import 'package:LinguaShelf_mobile/unknownpage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

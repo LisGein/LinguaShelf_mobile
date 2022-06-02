@@ -1,6 +1,6 @@
-# batut_de
+# LinguaShelf_mobile
 
-Free app to learn essential German phrases
+App for learning German through conversations with AI
 
 ## Getting Started
 

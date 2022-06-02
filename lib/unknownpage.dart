@@ -1,4 +1,4 @@
-import 'package:batut_de/styles.dart';
+import 'package:LinguaShelf_mobile/styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

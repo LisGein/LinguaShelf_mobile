@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:batut_de/pair.dart';
-import 'package:batut_de/tasksdata.dart';
+import 'package:LinguaShelf_mobile/pair.dart';
+import 'package:LinguaShelf_mobile/tasksdata.dart';
 import 'package:flutter/services.dart';
 
 class JsonReader {

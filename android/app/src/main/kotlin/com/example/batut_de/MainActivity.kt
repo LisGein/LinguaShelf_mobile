@@ -1,4 +1,4 @@
-package com.example.batut_de
+package com.example.LinguaShelf_mobile
 
 import io.flutter.embedding.android.FlutterActivity
 
