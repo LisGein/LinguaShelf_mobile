@@ -9,4 +9,18 @@ class Requests {
   }
 
   Map<Topic, Map<String, String>> data = {};
+
+  String getRequest(Topic t) {
+    if (!data.containsKey(t)) {
+      return "";
+    }
+
+    Map<String, String> callInfo = data[t]!;
+
+    if (!callInfo.containsKey("prompt")) {
+      return "";
+    }
+
+    return callInfo["prompt"]!;
+  }
 }

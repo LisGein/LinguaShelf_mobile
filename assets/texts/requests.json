@@ -5,6 +5,9 @@
     },
     "call_plumber": {
       "prompt": "Der Nutzer lebt in Deutschland. Der Benutzer hat ein verstopftes Waschbecken. Der Benutzer ruft einen Klempner an. Der Klempner antwortet auf Deutsch:"
+    },
+    "general": {
+      "prompt": "Der Nutzer lebt in Deutschland. Der Benutzer spricht mit jemandem auf Deutsch:"
     }
   }
 }

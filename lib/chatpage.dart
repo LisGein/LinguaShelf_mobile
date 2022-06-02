@@ -72,9 +72,16 @@ class _ChatPageState extends State<ChatPage> {
               onPressed: () async {
                 var text = promptController.text;
 
-                widget.context += " Der Benutzer antwortet: " + text + ". ";
-                String complete = await openAI.callWithPlumber(widget.context);
-                widget.context += complete;
+                widget.context += " Der Benutzer antwortet: \"" + text;
+                if (!text.trim().endsWith(".") && (!text.trim().endsWith("?")) && (!text.trim().endsWith("!"))) {
+                  widget.context += ".";
+                }
+
+                widget.context += "\"";
+                var answer = await openAI.completeStoryByContext(widget.context);
+
+                widget.context += answer;
+
                 setState(() {
                   chat.add(ChatMessageStyle(
                       sender: Sender.User,
@@ -83,7 +90,7 @@ class _ChatPageState extends State<ChatPage> {
                   promptController.clear();
                   chat.add(ChatMessageStyle(
                       sender: Sender.AI,
-                      styleToText: [Pair(Styles.getTextStyle(), complete)]));
+                      styleToText: [Pair(Styles.getTextStyle(), answer)]));
                 });
               },
               child: Text('Send'),

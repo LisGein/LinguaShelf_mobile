@@ -24,66 +24,49 @@ class OpenAI {
     return url;
   }
 
-  Future<String> editMessage(String text) async {
-    Map reqData = {
-      "input": text,
-      "instruction": "Korrigieren Sie die Grammatik und Rechtschreibung"
-    };
-
-
-    var headers = {
+  Map<String, String> _generateCompletionHeaders({bool isCorrections = true}) {
+    var user = "Debug19fa61d75522a4669b44e39c1d2efsdf1726c530232130ddsf407fsd89afee096fsdf4997f7a73e83be698bsdfsdf288febcf88e3e03c4f0757ea8964e59b63d93708b138cc42asdasda66";
+    if (isCorrections)
+      user += "corrections";
+    else
+      user += "story";
+    return {
       "authorization": "Bearer $apiKey",
       "accept": "application/json",
       "content-type": "application/json",
-      "max_tokens": "100"
+      "user": user
+    };
+  }
+
+
+  Future<String> editMessage(String text) async {
+    /*Map reqData = {
+      "input": text,
+      "instruction": "Fix the spelling and grammar mistakes, and explain corrections."
     };
 
-/*    String engine = await updateListOfEngines("api.openai.com", "v1/engines", {
+
+    String engine = await updateListOfEngines("api.openai.com", "v1/engines", {
     "authorization": "Bearer $apiKey",
     "accept": "application/json",
     "content-type": "application/json",
-      "max_tokens": "5000"});*/
-    return await correctionRequest("api.openai.com", "v1/engines/text-davinci-edit-001/edits", headers, reqData);
-  }
-
-  Future<String> orderInRestaurant(
-      String question, String context
-      ) async {
+      "max_tokens": "5000"});
+    return await request("api.openai.com", "v1/engines/text-davinci-edit-001/edits", _generateHeaders(), reqData, false);*/
 
     Map reqData = {
-      "model": "davinci",
-      "question": question,
-      "examples": [
-        ["Ich hätte gern eine Cola.", "Eine Cola kommt gleich."]
-      ],
-      "examples_context":
-      "The following is a conversation with an AI assistant a waitress in a restaurant. The conversation is in German. " + context,
-      "documents": []
+      "prompt": "Correct this to standard German and explain mistakes:\"" + text + "\". Use only German letters and UTF-8.",
+      "max_tokens" : 150,
+      "temperature" : 1,
+      "presence_penalty" : 0,
+      "frequency_penalty" : 0
     };
 
-
-    var headers = {
-      "authorization": "Bearer $apiKey",
-      "accept": "application/json",
-      "content-type": "application/json",
-      "temperature": "0.5",
-      "max_tokens": "300"
-    };
-
-
-    return QARequest(headers, reqData);
+    return completionsRequest(_generateCompletionHeaders(isCorrections: false), reqData);
   }
 
-
-  Future<String> callWithPlumber(
+  Future<String> completeStoryByContext(
       String context
       ) async {
-
-    var headers = {
-      "authorization": "Bearer $apiKey",
-      "accept": "application/json",
-      "content-type": "application/json",
-    };
 
     Map reqData = {
       "prompt": context,
@@ -93,100 +76,41 @@ class OpenAI {
       "frequency_penalty" : 0
     };
 
-    return CompletionsRequest(headers, reqData);
+    return completionsRequest(_generateCompletionHeaders(), reqData);
   }
 
   Future<String> startOfDiscussion(Topic topic) async {
-    switch (topic) {
-      case Topic.CallDoctor:
-        return await _startOfCallToDoctor();
-      case Topic.CallPlumber:
-        return await _startOfCallToPlumber();
-      default:
-        return await _startOfGeneralConversation();
-    }
-  }
 
-
-  Future<String> _startOfGeneralConversation() async {
-    var headers = {
-      "authorization": "Bearer $apiKey",
-      "accept": "application/json",
-      "content-type": "application/json",
-    };
-
-    Map reqData = {
-      "model": "davinci",
-      "question": "Generate 5 possible conversation starters when a client calls the clinic to make an appointment.",
-      "examples": [
-        ["Praxis, guten Tag. Was kann ich für Sie tun?", "Hallo, Praxis XY. Was kann ich für Sie tun?"]
-      ],
-      "examples_context":
-      "I am a highly intelligent question answering bot. The conversation is in German.",
-      "documents": [],
-      "max_tokens" : 100
-    };
-
-    return QARequest(headers, reqData);
-  }
-
-  Future<String> _startOfCallToDoctor() async {
-    var headers = {
-      "authorization": "Bearer $apiKey",
-      "accept": "application/json",
-      "content-type": "application/json",
-    };
-
-    Map reqData = {
-      "model": "davinci",
-      "question": "Generate 5 possible conversation starters when a client calls the clinic to make an appointment.",
-      "examples": [
-        ["Praxis, guten Tag. Was kann ich für Sie tun?", "Hallo, Praxis XY. Was kann ich für Sie tun?"]
-      ],
-      "examples_context":
-      "I am a highly intelligent question answering bot. The conversation is in German.",
-      "documents": [],
-      "max_tokens" : 100
-    };
-
-    return QARequest(headers, reqData);
-  }
-
-  Future<String> _startOfCallToPlumber() async {
-    var headers = {
-      "authorization": "Bearer $apiKey",
-      "accept": "application/json",
-      "content-type": "application/json",
-    };
-    String str = "Der Nutzer lebt in Deutschland. Der Benutzer hat ein verstopftes Waschbecken. Der Benutzer ruft einen Klempner an. Der Klempner antwortet auf Deutsch:";
+    String str = requests.getRequest(topic);
     Map reqData = {
       "prompt": str,
       "max_tokens" : 150,
       "temperature" : 0.7,
     };
 
-    str += await CompletionsRequest(headers, reqData);
+    str += await completionsRequest(_generateCompletionHeaders(), reqData);
 
     return str;
   }
 
-  Future<String> QARequest(Map<String, String> headers, Map reqData) async {
-    return await questionRequest("api.openai.com", "v1/answers", headers, reqData);
+  Future<String> qaRequest(Map<String, String> headers, Map reqData) async {
+    return await request("api.openai.com", "v1/answers", headers, reqData, true);
   }
 
-  Future<String> CompletionsRequest(Map<String, String> headers, Map reqData) async {
-    return await correctionRequest("api.openai.com", "v1/engines/text-davinci-002/completions", headers, reqData);
+  Future<String> completionsRequest(Map<String, String> headers, Map reqData) async {
+    return await request("api.openai.com", "v1/engines/text-davinci-002/completions", headers, reqData, false);
   }
 
-  Future<String> questionRequest(String authority, String unencodedPath,
-      Map<String, String> headers, Map reqData) async {
-
+  Future<String> request(String authority, String unencodedPath,
+      Map<String, String> headers, Map reqData, bool isQuestion) async {
     if (apiKey.isEmpty) {
       return "";
     }
-    print("question request:");
+
+    print("request:");
     print(Uri.https(authority, unencodedPath));
     print(reqData);
+
     var response = await http
         .post(
       Uri.https(authority, unencodedPath),
@@ -195,35 +119,19 @@ class OpenAI {
     )
         .timeout(const Duration(seconds: 120));
 
-    print("question response:");
+    print("response:");
     print(response.body);
     Map<String, dynamic> map = json.decode(response.body);
-    List<dynamic> resp = map["answers"];
-    return resp[0];
-  }
 
-  Future<String> correctionRequest(String authority, String unencodedPath,
-      Map<String, String> headers, Map reqData) async {
 
-    if (apiKey.isEmpty) {
-      return "";
-    }
-    print("correction request:");
-    print(Uri.https(authority, unencodedPath));
-    print(reqData);
-    var response = await http
-        .post(
-      Uri.https(authority, unencodedPath),
-      headers: headers,
-      body: jsonEncode(reqData),
-    )
-        .timeout(const Duration(seconds: 120));
+    List<dynamic> resp = isQuestion ? map["answers"] : map["choices"];
+    var answer =  isQuestion ? resp[0] : resp[0]["text"];
 
-    print("correction response:");
-    print(response.body);
-    Map<String, dynamic> map = json.decode(response.body);
-    List<dynamic> resp = map["choices"];
-    return resp[0]["text"];
+    var bytes = latin1.encode(answer);
+    var utfStr = utf8.decode(bytes);
+
+    print("decoded:" + utfStr);
+    return utfStr;
   }
 
   Future<String> updateListOfEngines(String authority, String unencodedPath, Map<String, String> headers) async {
