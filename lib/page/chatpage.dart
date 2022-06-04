@@ -3,11 +3,11 @@ import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'applicationstate.dart';
-import 'openai/chatmessagestyle.dart';
-import 'openai/opanai.dart';
-import 'pair.dart';
-import 'styles.dart';
+import '../applicationstate.dart';
+import '../openai/chatmessagestyle.dart';
+import '../openai/opanai.dart';
+import '../pair.dart';
+import '../styles.dart';
 
 // ignore: must_be_immutable
 class ChatPage extends StatefulWidget {

@@ -2,11 +2,11 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
 
-import '../lswidgets/lstext.dart';
+import '../widgets/styledtext.dart';
 import '../pair.dart';
 
-class LsListWidget extends StatelessWidget {
-  const LsListWidget({Key? key, required this.data, required this.routeName, this.divThickness = 5.0}) : super(key: key);
+class ListWidget extends StatelessWidget {
+  const ListWidget({Key? key, required this.data, required this.routeName, this.divThickness = 5.0}) : super(key: key);
   final List<Pair> data;
   final double divThickness;
   final String routeName;
@@ -24,7 +24,7 @@ class LsListWidget extends StatelessWidget {
           child: SizedBox(
               height: 75,
               child: Center(
-                child: LsWhiteText.pair(data[index]),
+                child: StyledWhiteText.pair(data[index]),
               )),
         );
       },

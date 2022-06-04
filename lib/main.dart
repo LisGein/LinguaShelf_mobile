@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'applicationstate.dart';
-import 'chatpage.dart';
-import 'loadingpage.dart';
+import 'page/chatpage.dart';
+import 'page/loadingpage.dart';
 import 'topic.dart';
-import 'topicchooserpage.dart';
-import 'unknownpage.dart';
+import 'page/topicchooserpage.dart';
+import 'page/unknownpage.dart';
 
 class MainWidget extends StatelessWidget {
   const MainWidget({Key? key}) : super(key: key);
