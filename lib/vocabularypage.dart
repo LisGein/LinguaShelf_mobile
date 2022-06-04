@@ -1,14 +1,15 @@
-import 'package:LinguaShelf_mobile/LsWidgets/lstext.dart';
-import 'package:LinguaShelf_mobile/basepage.dart';
-import 'package:LinguaShelf_mobile/words/writewordpage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:provider/provider.dart';
 
 import 'applicationstate.dart';
+import 'basepage.dart';
+import 'lswidgets/lstext.dart';
+import 'words/writewordpage.dart';
 
 class VocabularyPage extends BasePage {
+  const VocabularyPage({Key? key}) : super(key: key);
+
   @override
   Widget buildBody(BuildContext context) {
     return Consumer<ApplicationState>(builder: (context, appState, _) {

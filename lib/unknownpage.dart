@@ -1,11 +1,12 @@
-import 'package:LinguaShelf_mobile/styles.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../basepage.dart';
-import 'LsWidgets/lstext.dart';
+import 'styles.dart';
+import 'lswidgets/lstext.dart';
 
 class UnknownPage extends BasePage {
+  const UnknownPage({Key? key}) : super(key: key);
+
   @override
   Widget buildBody(BuildContext context) {
     return LsText(

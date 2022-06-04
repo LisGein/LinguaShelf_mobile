@@ -1,11 +1,11 @@
-import 'package:LinguaShelf_mobile/pair.dart';
-import 'package:LinguaShelf_mobile/requests.dart';
-import 'package:LinguaShelf_mobile/tasksdata.dart';
-import 'package:LinguaShelf_mobile/topic.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'jsonreader.dart';
 import 'openai/opanai.dart';
+import 'pair.dart';
+import 'requests.dart';
+import 'tasksdata.dart';
+import 'topic.dart';
 
 class ApplicationState extends ChangeNotifier {
   ApplicationState() {

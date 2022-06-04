@@ -1,19 +1,21 @@
-import 'package:LinguaShelf_mobile/pair.dart';
-import 'package:LinguaShelf_mobile/styles.dart';
-import 'package:flutter/cupertino.dart';
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'applicationstate.dart';
 import 'openai/chatmessagestyle.dart';
 import 'openai/opanai.dart';
+import 'pair.dart';
+import 'styles.dart';
 
+// ignore: must_be_immutable
 class ChatPage extends StatefulWidget {
-  ChatPage({required this.firstQuestion}) {
+  ChatPage({Key? key, required this.firstQuestion}) : super(key: key) {
     context = firstQuestion;
   }
 
-  String firstQuestion;
+  final String firstQuestion;
 
   String context = "";
 
@@ -33,15 +35,15 @@ class _ChatPageState extends State<ChatPage> {
     var pair = Pair(
         Styles.getTextStyle(
             fontStyle: FontStyle.italic,
-            color: Color.fromARGB(255, 91, 92, 94)),
-        "\n___________\n\'\'" + corrections + "\'\'");
+            color: const Color.fromARGB(255, 91, 92, 94)),
+        "\n___________\n''" + corrections + "''");
     setState(() {
       if (chat[messageIndex].styleToText.length == 2) {
         chat[messageIndex].styleToText[1] = pair;
       } else if (chat[messageIndex].styleToText.length == 1) {
         chat[messageIndex].styleToText.add(pair);
       } else {
-        print("Unexpected number of chat messages! Length: " +
+        developer.log("Unexpected number of chat messages! Length: " +
             chat[messageIndex].styleToText.length.toString());
       }
     });
@@ -61,7 +63,7 @@ class _ChatPageState extends State<ChatPage> {
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
                   controller: promptController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: "Enter your answer",
                   )),
             ),
@@ -84,16 +86,16 @@ class _ChatPageState extends State<ChatPage> {
 
                 setState(() {
                   chat.add(ChatMessageStyle(
-                      sender: Sender.User,
+                      sender: Sender.user,
                       styleToText: [Pair(Styles.getTextStyle(), text)]));
                   correctMessage(openAI, text, chat.length - 1);
                   promptController.clear();
                   chat.add(ChatMessageStyle(
-                      sender: Sender.AI,
+                      sender: Sender.ai,
                       styleToText: [Pair(Styles.getTextStyle(), answer)]));
                 });
               },
-              child: Text('Send'),
+              child: const Text('Send'),
               color: Colors.blue,
               textColor: Colors.white,
             ),
@@ -105,13 +107,13 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget _messageRectangle(List<Pair> texts, Sender sender) {
     var alignment =
-        sender == Sender.AI ? Alignment.topLeft : Alignment.topRight;
+        sender == Sender.ai ? Alignment.topLeft : Alignment.topRight;
 
     List<Text> messageParts = [];
 
     for (var text in texts) {
       messageParts.add(Text(text.right, style: text.left));
-      print(text.left);
+      developer.log(text.left);
     }
 
     return Padding(
@@ -129,7 +131,7 @@ class _ChatPageState extends State<ChatPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: Column(children: messageParts),
                 ),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(
                       begin: Alignment.topRight,
                       end: Alignment.bottomLeft,
@@ -151,7 +153,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget chatViewer() {
     List<Widget> w = [
       _messageRectangle(
-          [Pair(Styles.getTextStyle(), widget.firstQuestion)], Sender.AI)
+          [Pair(Styles.getTextStyle(), widget.firstQuestion)], Sender.ai)
     ];
     for (var textSettings in chat) {
       if (textSettings.styleToText.isNotEmpty) {

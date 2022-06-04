@@ -1,10 +1,12 @@
-import 'package:LinguaShelf_mobile/styles.dart';
 import 'package:flutter/material.dart';
 
-import 'LsWidgets/lstext.dart';
 import 'basepage.dart';
+import 'lswidgets/lstext.dart';
+import 'styles.dart';
 
 class LoadingPage extends BasePage {
+  const LoadingPage({Key? key}) : super(key: key);
+
   @override
   Widget buildBody(BuildContext context) {
     return LsText(

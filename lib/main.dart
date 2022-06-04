@@ -1,19 +1,21 @@
-import 'package:LinguaShelf_mobile/applicationstate.dart';
-import 'package:LinguaShelf_mobile/topic.dart';
-import 'package:LinguaShelf_mobile/topicchooserpage.dart';
-import 'package:LinguaShelf_mobile/chatpage.dart';
-import 'package:LinguaShelf_mobile/unknownpage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'applicationstate.dart';
+import 'chatpage.dart';
 import 'loadingpage.dart';
+import 'topic.dart';
+import 'topicchooserpage.dart';
+import 'unknownpage.dart';
 
 class MainWidget extends StatelessWidget {
+  const MainWidget({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     const mainBlueColor = Color.fromARGB(255, 135, 174, 207);
     return MaterialApp(
-      title: 'Batut.de',
+      title: 'LinguaShelf_mobile',
       theme: ThemeData(
           //colorScheme: ColorScheme(primary: Color.fromARGB(250, 0, 87, 183), onPrimary: Colors.white, brightness: Brightness.light,
           //    secondary: Color.fromARGB(250, 252, 136, 3), onSecondary: Colors.white, ),
@@ -25,7 +27,7 @@ class MainWidget extends StatelessWidget {
       onGenerateRoute: (settings) {
         if (settings.name == '/') {
           return MaterialPageRoute(
-              builder: (context) => TopicChooserPage(), settings: settings);
+              builder: (context) =>  const TopicChooserPage(), settings: settings);
         }
 
         var uri = Uri.parse(settings.name!);
@@ -38,7 +40,7 @@ class MainWidget extends StatelessWidget {
                       builder: (BuildContext context,
                           AsyncSnapshot<dynamic> topics) {
                         if (!topics.hasData) {
-                          return LoadingPage();
+                          return const LoadingPage();
                         } else {
                           return ChatPage(firstQuestion: topics.data);
                         }
@@ -47,7 +49,7 @@ class MainWidget extends StatelessWidget {
         }
 
         return MaterialPageRoute(
-            builder: (context) => UnknownPage(), settings: settings);
+            builder: (context) => const UnknownPage(), settings: settings);
       },
     );
   }
@@ -57,7 +59,7 @@ void main() {
   runApp(
     ChangeNotifierProvider(
       create: (context) => ApplicationState(),
-      builder: (context, _) => MainWidget(),
+      builder: (context, _) => const MainWidget(),
     ),
   );
 }

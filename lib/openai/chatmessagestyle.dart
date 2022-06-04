@@ -1,6 +1,6 @@
 import '../pair.dart';
 
-enum Sender { User, AI }
+enum Sender { user, ai }
 
 class ChatMessageStyle {
   ChatMessageStyle({required this.sender, required this.styleToText});

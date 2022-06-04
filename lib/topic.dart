@@ -1,20 +1,20 @@
 
 enum Topic {
-  CallDoctor,
-  CallPlumber,
-  General,
-  Unknown
+  callDoctor,
+  callPlumber,
+  general,
+  unknown
 }
 
 Topic strToEnum(String t) {
   switch (t) {
     case "call_doctor":
-      return Topic.CallDoctor;
+      return Topic.callDoctor;
     case "call_plumber":
-      return Topic.CallPlumber;
+      return Topic.callPlumber;
     case "general":
-      return Topic.General;
+      return Topic.general;
     default:
-      return Topic.Unknown;
+      return Topic.unknown;
   }
 }

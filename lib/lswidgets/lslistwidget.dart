@@ -1,14 +1,15 @@
-import 'package:LinguaShelf_mobile/LsWidgets/lstext.dart';
-import 'package:flutter/cupertino.dart';
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 
+import '../lswidgets/lstext.dart';
 import '../pair.dart';
 
 class LsListWidget extends StatelessWidget {
-  LsListWidget({required this.data, required this.routeName, this.divThickness = 5.0});
-  List<Pair> data;
-  double divThickness;
-  String routeName;
+  const LsListWidget({Key? key, required this.data, required this.routeName, this.divThickness = 5.0}) : super(key: key);
+  final List<Pair> data;
+  final double divThickness;
+  final String routeName;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class LsListWidget extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         return GestureDetector(
           onTap: () {
-            print("/" + routeName + "/" + data[index].left);
+            developer.log("/" + routeName + "/" + data[index].left);
             Navigator.pushNamed(context, "/" + routeName + "/" + data[index].left);
           },
           child: SizedBox(

@@ -1,14 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../pair.dart';
 import '../styles.dart';
 
 
+// ignore: must_be_immutable
 class LsText extends StatelessWidget {
-  LsText(this.text, {this.style});
+  LsText(this.text, {Key? key, this.style}) : super(key: key);
 
-  String text;
+  final String text;
   TextStyle? style;
 
   @override
@@ -20,8 +20,9 @@ class LsText extends StatelessWidget {
 }
 
 
+// ignore: must_be_immutable
 class LsWhiteText extends LsText {
-  LsWhiteText.pair(Pair text) : super(text.right, style: Styles.getTextStyle(color: Colors.white));
-  LsWhiteText(String text) : super(text, style: Styles.getTextStyle(color: Colors.white));
+  LsWhiteText.pair(Pair text, {Key? key}) : super(text.right, key: key, style: Styles.getTextStyle(color: Colors.white));
+  LsWhiteText(String text, {Key? key}) : super(text, key: key, style: Styles.getTextStyle(color: Colors.white));
 
 }

@@ -1,12 +1,14 @@
-import 'package:LinguaShelf_mobile/LsWidgets/lstext.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../basepage.dart';
 import 'applicationstate.dart';
-import 'LsWidgets/lslistwidget.dart';
+import 'lswidgets/lslistwidget.dart';
+import 'lswidgets/lstext.dart';
 
 class TopicChooserPage extends BasePage {
+  const TopicChooserPage({Key? key}) : super(key: key);
+
 
   @override
   Widget buildBody(BuildContext context) {

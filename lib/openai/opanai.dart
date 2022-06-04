@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer' as developer;
 
 import 'package:http/http.dart' as http;
 
@@ -26,10 +27,11 @@ class OpenAI {
 
   Map<String, String> _generateCompletionHeaders({bool isCorrections = true}) {
     var user = "Debug19fa61d75522a4669b44e39c1d2efsdf1726c530232130ddsf407fsd89afee096fsdf4997f7a73e83be698bsdfsdf288febcf88e3e03c4f0757ea8964e59b63d93708b138cc42asdasda66";
-    if (isCorrections)
+    if (isCorrections) {
       user += "corrections";
-    else
+    } else {
       user += "story";
+    }
     return {
       "authorization": "Bearer $apiKey",
       "accept": "application/json",
@@ -107,9 +109,9 @@ class OpenAI {
       return "";
     }
 
-    print("request:");
-    print(Uri.https(authority, unencodedPath));
-    print(reqData);
+    developer.log("request:");
+    developer.log(Uri.https(authority, unencodedPath).toString());
+    developer.log(reqData.toString());
 
     var response = await http
         .post(
@@ -119,8 +121,8 @@ class OpenAI {
     )
         .timeout(const Duration(seconds: 120));
 
-    print("response:");
-    print(response.body);
+    developer.log("response:");
+    developer.log(response.body);
     Map<String, dynamic> map = json.decode(response.body);
 
 
@@ -130,7 +132,7 @@ class OpenAI {
     var bytes = latin1.encode(answer);
     var utfStr = utf8.decode(bytes);
 
-    print("decoded:" + utfStr);
+    developer.log("decoded:" + utfStr);
     return utfStr;
   }
 
@@ -142,8 +144,8 @@ class OpenAI {
     )
         .timeout(const Duration(seconds: 120));
 
-    print("update response:");
-    print(response.body);
+    developer.log("update response:");
+    developer.log(response.body);
     Map<String, dynamic> map = json.decode(response.body);
     List<dynamic> resp = map["data"];
 

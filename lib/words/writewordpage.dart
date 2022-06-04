@@ -1,25 +1,24 @@
-import 'package:async/async.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
-import '../LsWidgets/lstext.dart';
+import 'package:async/async.dart';
 
-enum InputState { NotSubmited, Wrong, Right }
+import '../lswidgets/lstext.dart';
+
+enum InputState { notSubmitted, wrong, right }
 
 class WriteWordWidget extends StatefulWidget {
-  WriteWordWidget({required this.words, required this.translations});
+  WriteWordWidget({Key? key, required this.words, required this.translations}) : super(key: key);
 
   int wordIndex = 0;
   List<String> words;
   List<String> translations;
-  InputState state = InputState.NotSubmited;
+  InputState state = InputState.notSubmitted;
 
   void inputCallback(String inputWord) {
     if (inputWord != words[wordIndex]) {
-      state = InputState.Wrong;
+      state = InputState.wrong;
     } else {
-      state = InputState.Right;
+      state = InputState.right;
     }
   }
 
@@ -33,7 +32,7 @@ class _WriteWordState extends State<WriteWordWidget> {
 
   void handleTimeout() {
     ++widget.wordIndex;
-    widget.state = InputState.NotSubmited;
+    widget.state = InputState.notSubmitted;
     setState(() {});
   }
 
@@ -68,8 +67,8 @@ class _WriteWordState extends State<WriteWordWidget> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        if (widget.state == InputState.Wrong) LsWhiteText("Неправильно"),
-        if (widget.state == InputState.Right) LsWhiteText("Верно"),
+        if (widget.state == InputState.wrong) LsWhiteText("Неправильно"),
+        if (widget.state == InputState.right) LsWhiteText("Верно"),
         LsWhiteText(widget.words[widget.wordIndex] +
             " - " +
             widget.translations[widget.wordIndex]),
@@ -97,7 +96,7 @@ class _WriteWordState extends State<WriteWordWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.state == InputState.NotSubmited) {
+    if (widget.state == InputState.notSubmitted) {
       if (widget.wordIndex < widget.translations.length &&
           widget.wordIndex < widget.words.length) {
         return _inputWord();

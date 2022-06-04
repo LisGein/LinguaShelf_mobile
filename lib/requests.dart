@@ -1,4 +1,4 @@
-import 'package:LinguaShelf_mobile/topic.dart';
+import 'topic.dart';
 
 class Requests {
   Requests(Map<dynamic, dynamic> json) {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 abstract class BasePage extends StatelessWidget {
+  const BasePage({Key? key}) : super(key: key);
+
   Widget buildBody(BuildContext context);
 
   @override

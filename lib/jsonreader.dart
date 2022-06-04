@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:developer' as developer;
 
-import 'package:LinguaShelf_mobile/pair.dart';
-import 'package:LinguaShelf_mobile/tasksdata.dart';
 import 'package:flutter/services.dart';
+
+import 'pair.dart';
+import 'tasksdata.dart';
 
 class JsonReader {
 
@@ -63,7 +65,7 @@ class JsonReader {
       try {
         parsedJson = await json.decode(data.toString());
       } on FormatException catch (e) {
-        print('The provided string is not valid JSON: ' + e.message);
+        developer.log('The provided string is not valid JSON: ' + e.message);
       }
       return parsedJson;
   }
