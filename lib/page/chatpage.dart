@@ -113,7 +113,7 @@ class _ChatPageState extends State<ChatPage> {
 
     for (var text in texts) {
       messageParts.add(Text(text.right, style: text.left));
-      developer.log(text.left);
+      developer.log(text.left.toString());
     }
 
     return Padding(
