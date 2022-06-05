@@ -63,7 +63,7 @@ class OpenAI {
       "frequency_penalty" : 0
     };
 
-    return completionsRequest(_generateCompletionHeaders(isCorrections: false), reqData);
+    return await completionsRequest(_generateCompletionHeaders(isCorrections: false), reqData);
   }
 
   Future<String> completeStoryByContext(
@@ -78,7 +78,7 @@ class OpenAI {
       "frequency_penalty" : 0
     };
 
-    return completionsRequest(_generateCompletionHeaders(), reqData);
+    return await completionsRequest(_generateCompletionHeaders(), reqData);
   }
 
   Future<String> startOfDiscussion(Topic topic) async {
