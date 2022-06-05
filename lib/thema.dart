@@ -21,4 +21,5 @@ class Thema {
   static const Color buttonInvertedTextColor = Colors.blue;
 
   static const Color appTextColor = Color.fromARGB(255, 246, 246, 246);
+  static const Color appInvertedTextColor = Color.fromARGB(255, 43, 43, 43);
 }

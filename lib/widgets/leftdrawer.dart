@@ -78,10 +78,10 @@ class LeftDrawer extends StatelessWidget {
   }
 
   List<Widget> _buildContent(BuildContext context, ApplicationState appState) {
-    if (appState.loginState != ApplicationLoginState.loggedIn) {
-      return _buildGuestContent(context);
+    if (appState.loginState == ApplicationLoginState.loggedIn) {
+      return _buildUserContent(context, appState);
     }
-    return _buildUserContent(context, appState);
+    return _buildGuestContent(context);
   }
 
   @override

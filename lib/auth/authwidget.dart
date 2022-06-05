@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'package:google_sign_in/google_sign_in.dart';
+
 import '../widgets/accountwidget.dart';
+import '../widgets/styledtext.dart';
 
 enum ApplicationLoginState {
   loggedOut,
@@ -150,23 +154,18 @@ class _AuthFormContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
         child: Container(
-          padding: const EdgeInsets.fromLTRB(20.0, 50.0, 20.0, 0),
-          constraints: const BoxConstraints(maxWidth: 800, maxHeight: 400),
-          child: Card(child: Padding(
-            padding: const EdgeInsets.all(40.0),
-            child: Column(
-              children: [
-                //Header(title),
-                body,
-              ],
-            ),
-          )),
-        ));
+      constraints: const BoxConstraints(maxWidth: 800, maxHeight: 400),
+      child: Card(
+          child: Padding(
+        padding: const EdgeInsets.all(40.0),
+        child: body,
+      )),
+    ));
   }
 }
 
 class EmailForm extends StatefulWidget {
-  const EmailForm({Key? key, required this.callback}): super(key: key);
+  EmailForm({Key? key, required this.callback}) : super(key: key);
 
   final void Function(String email) callback;
 
@@ -178,6 +177,24 @@ class _EmailFormState extends State<EmailForm> {
   final _formKey = GlobalKey<FormState>(debugLabel: '_EmailFormState');
   final _controller = TextEditingController();
 
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
   @override
   Widget build(BuildContext context) {
     return _AuthFormContainer(
@@ -185,7 +202,7 @@ class _EmailFormState extends State<EmailForm> {
       body: Form(
         key: _formKey,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -207,22 +224,24 @@ class _EmailFormState extends State<EmailForm> {
                 },
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 16.0, horizontal: 30),
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        widget.callback(_controller.text);
-                      }
-                    },
-                    child: const Text('NEXT'),
-                  ),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    widget.callback(_controller.text);
+                  }
+                },
+                child: StyledText('Next'),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                  onPressed: () async {
+                    signInWithGoogle();
+                  },
+                  child: StyledText('Sign in with Google')),
             ),
           ],
         ),
@@ -232,15 +251,16 @@ class _EmailFormState extends State<EmailForm> {
 }
 
 class RegisterForm extends StatefulWidget {
-  const RegisterForm({Key? key,
+  const RegisterForm({
+    Key? key,
     required this.registerAccount,
     required this.cancel,
     required this.email,
-  }): super(key: key);
+  }) : super(key: key);
 
   final String email;
   final void Function(String email, String displayName, String password)
-  registerAccount;
+      registerAccount;
   final void Function() cancel;
 
   @override
@@ -359,10 +379,11 @@ class _RegisterFormState extends State<RegisterForm> {
 }
 
 class PasswordForm extends StatefulWidget {
-  const PasswordForm({Key? key,
+  const PasswordForm({
+    Key? key,
     required this.login,
     required this.email,
-  }): super(key: key);
+  }) : super(key: key);
 
   final String email;
   final void Function(String email, String password) login;
