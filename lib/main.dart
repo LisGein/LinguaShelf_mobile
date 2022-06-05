@@ -6,6 +6,7 @@ import 'auth/loginpage.dart';
 import 'page/chatpage.dart';
 import 'page/loadingpage.dart';
 import 'topic.dart';
+import 'page/accountpage.dart';
 import 'page/topicchooserpage.dart';
 import 'page/unknownpage.dart';
 
@@ -32,6 +33,10 @@ class MainWidget extends StatelessWidget {
         if (uri.pathSegments.first == 'login') {
           return MaterialPageRoute(
               builder: (context) => const LoginPage(), settings: settings);
+        }
+        if (uri.pathSegments.first == 'account') {
+          return MaterialPageRoute(
+              builder: (context) => AccountPage(), settings: settings);
         }
 
         if (uri.pathSegments.length == 2 && uri.pathSegments.first == 'topic') {

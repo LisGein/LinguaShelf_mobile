@@ -187,6 +187,14 @@ class ApplicationState extends ChangeNotifier {
     }
   }
 
+  String getUserName() {
+    String? displayName;
+    if (FirebaseAuth.instance.currentUser != null) {
+      displayName = FirebaseAuth.instance.currentUser!.displayName;
+    }
+    return displayName ?? "Guest";
+  }
+
   void signOut() {
     FirebaseAuth.instance.signOut();
     notifyListeners();

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/accountwidget.dart';
+
 enum ApplicationLoginState {
   loggedOut,
   emailAddress,
@@ -18,6 +20,7 @@ class AuthWidget extends StatelessWidget {
     required this.cancelRegistration,
     required this.registerAccount,
     required this.signOut,
+    required this.getUserName,
   }): super(key: key);
 
   final ApplicationLoginState loginState;
@@ -40,6 +43,7 @@ class AuthWidget extends StatelessWidget {
       void Function(Exception e) error,
       ) registerAccount;
   final void Function() signOut;
+  final String Function() getUserName;
 
   @override
   Widget build(BuildContext context) {
@@ -90,20 +94,7 @@ class AuthWidget extends StatelessWidget {
           },
         );
       case ApplicationLoginState.loggedIn:
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 20, right: 20),
-              child: ElevatedButton(
-                onPressed: () {
-                  signOut();
-                },
-                child: const Text('Sign out'),
-              ),
-            ),
-          ],
-        );
+        return AccountWidget(getUserName(), signOut: signOut);
       default:
         return Row(
           children: const [

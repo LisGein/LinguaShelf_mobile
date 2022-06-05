@@ -22,6 +22,7 @@ class LoginWidget extends StatelessWidget {
                 cancelRegistration: appState.cancelRegistration,
                 registerAccount: appState.registerAccount,
                 signOut: appState.signOut,
+                getUserName: appState.getUserName,
               );
             }
         )
