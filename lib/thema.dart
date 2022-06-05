@@ -18,4 +18,7 @@ class Thema {
 
   static const Color buttonColor = Colors.blue;
   static const Color buttonTextColor = Colors.white;
+
+  static const Color buttonInvertedColor = Colors.white;
+  static const Color buttonInvertedTextColor = Colors.blue;
 }
