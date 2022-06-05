@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../thema.dart';
+
 abstract class BasePage extends StatelessWidget {
   const BasePage({Key? key}) : super(key: key);
 
@@ -8,7 +10,6 @@ abstract class BasePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
       body: Container(
           alignment: Alignment.center,
           decoration: const BoxDecoration(
@@ -16,8 +17,8 @@ abstract class BasePage extends StatelessWidget {
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
               colors: [
-                Color.fromARGB(250, 0, 87, 183),
-                Color.fromARGB(250, 252, 136, 3),
+                Thema.topBaseColor,
+                Thema.bottomBaseColor,
               ],
             )),
         child: buildBody(context)

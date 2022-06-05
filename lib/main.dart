@@ -13,16 +13,13 @@ class MainWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const mainBlueColor = Color.fromARGB(255, 135, 174, 207);
     return MaterialApp(
       title: 'LinguaShelf_mobile',
-      theme: ThemeData(
-          //colorScheme: ColorScheme(primary: Color.fromARGB(250, 0, 87, 183), onPrimary: Colors.white, brightness: Brightness.light,
-          //    secondary: Color.fromARGB(250, 252, 136, 3), onSecondary: Colors.white, ),
-          backgroundColor: Colors.red,
+        theme: ThemeData(
+          scaffoldBackgroundColor: Colors.purple[200],
           elevatedButtonTheme: ElevatedButtonThemeData(
               style: ElevatedButton.styleFrom(
-            primary: mainBlueColor,
+            primary: Colors.blueAccent,
           ))),
       onGenerateRoute: (settings) {
         if (settings.name == '/') {
