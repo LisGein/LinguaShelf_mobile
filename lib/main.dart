@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'applicationstate.dart';
+import 'auth/loginpage.dart';
 import 'page/chatpage.dart';
 import 'page/loadingpage.dart';
 import 'topic.dart';
@@ -28,6 +29,11 @@ class MainWidget extends StatelessWidget {
         }
 
         var uri = Uri.parse(settings.name!);
+        if (uri.pathSegments.first == 'login') {
+          return MaterialPageRoute(
+              builder: (context) => const LoginPage(), settings: settings);
+        }
+
         if (uri.pathSegments.length == 2 && uri.pathSegments.first == 'topic') {
           return MaterialPageRoute(
               builder: (context) => Consumer<ApplicationState>(
