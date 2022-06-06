@@ -7,11 +7,21 @@ import '../requests.dart';
 import '../topic.dart';
 
 class OpenAI {
-  OpenAI({required this.apiKey, required this.requests});
+  OpenAI({required this.apiKey, required this.requests, required this.userID});
 
   String apiKey;
 
   Requests requests;
+
+  String userID;
+
+  bool isInitialized() {
+    return apiKey.isNotEmpty;
+  }
+
+  void updateUserID(String userID) {
+    this.userID = userID;
+  }
 
   String getUrl(function, [engine]) {
     List engineList = ['ada', 'babbage', 'curie', 'davinci'];
@@ -26,7 +36,7 @@ class OpenAI {
   }
 
   Map<String, String> _generateCompletionHeaders({bool isCorrections = true}) {
-    var user = "Debug19fa61d75522a4669b44e39c1d2efsdf1726c530232130ddsf407fsd89afee096fsdf4997f7a73e83be698bsdfsdf288febcf88e3e03c4f0757ea8964e59b63d93708b138cc42asdasda66";
+    var user = userID;
     if (isCorrections) {
       user += "corrections";
     } else {

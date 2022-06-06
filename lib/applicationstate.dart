@@ -18,9 +18,7 @@ import 'topic.dart';
 class ApplicationState extends ChangeNotifier {
   ApplicationState() {
     init();
-    _loadOpenAIKey();
   }
-
 
   var jsonReader = JsonReader();
   Future<TaskData>? currentTaskData;
@@ -28,7 +26,6 @@ class ApplicationState extends ChangeNotifier {
   void loadDialog(String topic) {
     currentTaskData = jsonReader.loadDialog(topic);
   }
-
 
   OpenAI? openAI;
 
@@ -55,12 +52,16 @@ class ApplicationState extends ChangeNotifier {
     return Pair(key, requests);
   }
 
-  void _loadOpenAIKey() async {
-    var pair = await _loadDataForAI();
-    if (pair.right != null) {
-      openAI = OpenAI(apiKey: pair.left, requests: pair.right);
-      notifyListeners();
+  Future<void> loadOpenAIKey() async {
+    String userID = getUserID();
+    if (openAI == null || !openAI!.isInitialized()) {
+      var pair = await _loadDataForAI();
+      if (pair.right != null) {
+        openAI = OpenAI(apiKey: pair.left, requests: pair.right, userID: userID);
+      }
     }
+    openAI!.updateUserID(userID);
+    notifyListeners();
   }
 
   Future<String> loadTopicsOfDiscussion(Topic topic) async {
@@ -193,6 +194,14 @@ class ApplicationState extends ChangeNotifier {
       displayName = FirebaseAuth.instance.currentUser!.displayName;
     }
     return displayName ?? "Guest";
+  }
+
+  String getUserID() {
+    String? id;
+    if (FirebaseAuth.instance.currentUser != null) {
+      id = FirebaseAuth.instance.currentUser!.uid;
+    }
+    return id ?? "Guest";
   }
 
   void signOut() {
