@@ -209,4 +209,97 @@ class ApplicationState extends ChangeNotifier {
     _loginState = ApplicationLoginState.loggedOut;
     notifyListeners();
   }
+
+
+  Future<void> loadUserCollection(BuildContext context) async {
+    String userID = getUserID();
+    final CollectionReference postsRef = FirebaseFirestore.instance.collection('users');
+    var documentReference =
+    postsRef.doc(userID);
+
+    var snapshotDoc = await documentReference.get();
+    if (!snapshotDoc.exists) {
+      postsRef.doc(userID).set({
+        'account_type' : 'free',
+        'conversations': []
+      });
+    }
+
+    documentReference.snapshots().listen((document) {
+      _readFields(snapshotDoc, userID).then((value) => notifyListeners());
+    });
+
+  }
+
+  List<Timestamp> conversations = [];
+  String accountType = "";
+
+  Future<void> _readFields(dynamic snapshot, String userID) async {
+    var document = FirebaseFirestore.instance.collection('users').doc(userID);
+    var documentRef = await document.get();
+    var type = documentRef.data()?['account_type'];
+    if (type == null) {
+      accountType = "free";
+      document.update({'account_type': accountType});
+    }
+    else {
+      accountType = type.toString();
+    }
+
+    await _readConversationsData();
+  }
+
+  Future<void> _readConversationsData() async {
+    String userID = getUserID();
+    var document = FirebaseFirestore.instance.collection('users').doc(userID);
+    var documentRef = await document.get();
+
+
+    var serializedFieldData = documentRef.data()?['conversations'];
+    if (serializedFieldData == null) {
+      conversations = [];
+      document.update({'conversations': conversations});
+    } else {
+      conversations = List.from(serializedFieldData).cast();
+    }
+  }
+
+  Future<void> onOpenedConversation() async {
+    await _readConversationsData();
+
+    String userID = getUserID();
+    var document = FirebaseFirestore.instance.collection('users').doc(userID);
+
+
+    var now = DateTime.now();
+
+    conversations.removeWhere((stamp) {
+      DateTime stampDateTime = stamp.toDate();
+      return stampDateTime.day != now.day || stampDateTime.month != now.month || stampDateTime.year != now.year;
+    });
+
+    conversations.add(Timestamp.fromDate(now));
+
+    document.update({'conversations': conversations});
+    notifyListeners();
+  }
+
+  bool isLimitReached() {
+    const int limit = 5;
+
+    if (conversations.length < limit) {
+      return false;
+    }
+
+    int number = 0;
+    var now = DateTime.now();
+    for (var stamp in conversations) {
+      DateTime stampDateTime = stamp.toDate();
+      if (stampDateTime.day == now.day && stampDateTime.month == now.month && stampDateTime.year == now.year) {
+        ++number;
+      }
+    }
+
+    return number > limit;
+  }
 }

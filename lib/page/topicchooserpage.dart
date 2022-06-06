@@ -9,6 +9,5 @@ class TopicChooserPage extends BasePage {
   @override
   Widget buildBody(BuildContext context) {
     return const TopicChooserWidget();
-
   }
 }

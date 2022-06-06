@@ -11,6 +11,9 @@ class StyledText extends StatelessWidget {
   StyledText.color(this.text, Color color, {Key? key}) : super(key: key) {
     style = Styles.getTextStyle(color: color);
   }
+  StyledText.size(this.text, double fontSize, {Key? key}) : super(key: key) {
+    style = Styles.getTextStyle(fontSize: fontSize);
+  }
 
   final String text;
   TextStyle? style;

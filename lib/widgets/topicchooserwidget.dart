@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../applicationstate.dart';
 import '../auth/authwidget.dart';
 import '../widgets/styledtext.dart';
+import 'errordialog.dart';
 
 class TopicChooserWidget extends StatelessWidget {
   const TopicChooserWidget(
@@ -11,6 +12,24 @@ class TopicChooserWidget extends StatelessWidget {
       : super(key: key);
   final double divThickness;
   final String routeName = 'topic';
+
+  void openConversation(ApplicationState appState, BuildContext context, dynamic topic) async {
+    await appState.loadOpenAIKey();
+    await appState.loadUserCollection(context);
+    await appState.onOpenedConversation();
+    if (!appState.isLimitReached()) {
+      Navigator.pushNamed(context,
+          "/" + routeName + "/" + topic);
+    }
+    else {
+      showDialog<void>(
+        context: context,
+        builder: (context) {
+          return ErrorDialog(title: "The free limit reached", message: "The number of conversations for free accounts is limited");
+        },
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +49,7 @@ class TopicChooserWidget extends StatelessWidget {
                       if (appState.loginState ==
                           ApplicationLoginState.loggedIn) {
 
-                        appState.loadOpenAIKey().then((erg) =>
-                        Navigator.pushNamed(context,
-                            "/" + routeName + "/" + topics.data[index].left)
-                      );
+                        openConversation(appState, context, topics.data[index].left);
                       } else {
                         Navigator.pushNamed(context, "/login/");
                       }

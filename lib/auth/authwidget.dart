@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../widgets/accountwidget.dart';
+import '../widgets/errordialog.dart';
 import '../widgets/styledtext.dart';
 
 enum ApplicationLoginState {
@@ -112,33 +113,7 @@ class AuthWidget extends StatelessWidget {
     showDialog<void>(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text(
-            title,
-            style: const TextStyle(fontSize: 24),
-          ),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(
-                  '${(e as dynamic).message}',
-                  style: const TextStyle(fontSize: 18),
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                'OK',
-                style: TextStyle(color: Colors.deepPurple),
-              ),
-            ),
-          ],
-        );
+        return ErrorDialog(title: title, message: '${(e as dynamic).message}');
       },
     );
   }
