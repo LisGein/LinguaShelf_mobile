@@ -69,6 +69,12 @@ class LeftDrawer extends StatelessWidget {
         thickness: 1,
       ),
       ListTile(
+        title: StyledText('Buy premium'),
+        onTap: () {
+          Navigator.pushNamed(context, "/premium/");
+        },
+      ),
+      ListTile(
         title: StyledText('My account'),
         onTap: () {
           Navigator.pushNamed(context, "/account/");

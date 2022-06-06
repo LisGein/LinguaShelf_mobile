@@ -38,7 +38,8 @@ class ApplicationState extends ChangeNotifier {
   }
 
   Future<Requests?> _readRequestsFile() async {
-    var parsedJson = await JsonReader.loadParsedJson('assets/texts/requests.json');
+    var parsedJson =
+        await JsonReader.loadParsedJson('assets/texts/requests.json');
     if (parsedJson != null && parsedJson["requests"] != null) {
       return Requests(parsedJson["requests"]);
     }
@@ -57,7 +58,8 @@ class ApplicationState extends ChangeNotifier {
     if (openAI == null || !openAI!.isInitialized()) {
       var pair = await _loadDataForAI();
       if (pair.right != null) {
-        openAI = OpenAI(apiKey: pair.left, requests: pair.right, userID: userID);
+        openAI =
+            OpenAI(apiKey: pair.left, requests: pair.right, userID: userID);
       }
     }
     openAI!.updateUserID(userID);
@@ -71,10 +73,11 @@ class ApplicationState extends ChangeNotifier {
     return "OpenAI is not loaded!";
   }
 
-
   ApplicationLoginState _loginState = ApplicationLoginState.emailAddress;
+
   ApplicationLoginState get loginState => _loginState;
   String? _email;
+
   String? get email => _email;
 
   Future<void> init() async {
@@ -109,12 +112,12 @@ class ApplicationState extends ChangeNotifier {
   }
 
   void verifyEmail(
-      String email,
-      void Function(FirebaseAuthException e) errorCallback,
-      ) async {
+    String email,
+    void Function(FirebaseAuthException e) errorCallback,
+  ) async {
     try {
       var methods =
-      await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
       if (methods.contains('password')) {
         _loginState = ApplicationLoginState.password;
       } else {
@@ -135,7 +138,7 @@ class ApplicationState extends ChangeNotifier {
     if (!snapshot.exists) {
       hasAccess = false;
       var wl =
-      FirebaseFirestore.instance.collection('tokens').doc('waiting_list');
+          FirebaseFirestore.instance.collection('tokens').doc('waiting_list');
       var wlref = await wl.get();
       if (wlref.exists) {
         developer.log(wlref.data().toString());
@@ -158,10 +161,10 @@ class ApplicationState extends ChangeNotifier {
   }
 
   Future<void> signInWithEmailAndPassword(
-      String email,
-      String password,
-      void Function(Exception e) errorCallback,
-      ) async {
+    String email,
+    String password,
+    void Function(Exception e) errorCallback,
+  ) async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
@@ -210,50 +213,65 @@ class ApplicationState extends ChangeNotifier {
     notifyListeners();
   }
 
-
   Future<void> loadUserCollection(BuildContext context) async {
     String userID = getUserID();
-    final CollectionReference postsRef = FirebaseFirestore.instance.collection('users');
-    var documentReference =
-    postsRef.doc(userID);
+    final CollectionReference postsRef =
+        FirebaseFirestore.instance.collection('users');
+    var documentReference = postsRef.doc(userID);
 
     var snapshotDoc = await documentReference.get();
     if (!snapshotDoc.exists) {
       postsRef.doc(userID).set({
-        'account_type' : 'free',
-        'conversations': []
+        'account_type': 'free',
+        'conversations': [],
+        'notify_about_premium': false
       });
     }
 
     documentReference.snapshots().listen((document) {
       _readFields(snapshotDoc, userID).then((value) => notifyListeners());
     });
-
   }
 
   List<Timestamp> conversations = [];
   String accountType = "";
+  bool notifyAboutPremium = false;
 
   Future<void> _readFields(dynamic snapshot, String userID) async {
     var document = FirebaseFirestore.instance.collection('users').doc(userID);
     var documentRef = await document.get();
-    var type = documentRef.data()?['account_type'];
-    if (type == null) {
-      accountType = "free";
-      document.update({'account_type': accountType});
-    }
-    else {
-      accountType = type.toString();
+
+    await _readNotificationData();
+
+    var notify = documentRef.data()?['notify_about_premium'];
+    if (notify == null) {
+      notifyAboutPremium = false;
+      document.update({'notify_about_premium': notifyAboutPremium});
+    } else {
+      notifyAboutPremium = notify;
     }
 
     await _readConversationsData();
+  }
+
+  Future<void> _readNotificationData() async {
+    String userID = getUserID();
+    var document = FirebaseFirestore.instance.collection('users').doc(userID);
+    var documentRef = await document.get();
+
+    var notify = documentRef.data()?['notify_about_premium'];
+    if (notify == null) {
+      notifyAboutPremium = false;
+      document.update({'notify_about_premium': notifyAboutPremium});
+    } else {
+      notifyAboutPremium = notify;
+    }
   }
 
   Future<void> _readConversationsData() async {
     String userID = getUserID();
     var document = FirebaseFirestore.instance.collection('users').doc(userID);
     var documentRef = await document.get();
-
 
     var serializedFieldData = documentRef.data()?['conversations'];
     if (serializedFieldData == null) {
@@ -270,18 +288,34 @@ class ApplicationState extends ChangeNotifier {
     String userID = getUserID();
     var document = FirebaseFirestore.instance.collection('users').doc(userID);
 
-
     var now = DateTime.now();
 
     conversations.removeWhere((stamp) {
       DateTime stampDateTime = stamp.toDate();
-      return stampDateTime.day != now.day || stampDateTime.month != now.month || stampDateTime.year != now.year;
+      return stampDateTime.day != now.day ||
+          stampDateTime.month != now.month ||
+          stampDateTime.year != now.year;
     });
 
     conversations.add(Timestamp.fromDate(now));
 
     document.update({'conversations': conversations});
     notifyListeners();
+  }
+
+  void updateNotificationSettings(bool notifyAboutPremium) async {
+    await _readNotificationData();
+    if (notifyAboutPremium != this.notifyAboutPremium) {
+      String userID = getUserID();
+      var document = FirebaseFirestore.instance.collection('users').doc(userID);
+      this.notifyAboutPremium = notifyAboutPremium;
+      document.update({'notify_about_premium': notifyAboutPremium});
+      notifyListeners();
+    }
+  }
+
+  bool isPremiumNotificationOn() {
+    return notifyAboutPremium;
   }
 
   bool isLimitReached() {
@@ -295,7 +329,9 @@ class ApplicationState extends ChangeNotifier {
     var now = DateTime.now();
     for (var stamp in conversations) {
       DateTime stampDateTime = stamp.toDate();
-      if (stampDateTime.day == now.day && stampDateTime.month == now.month && stampDateTime.year == now.year) {
+      if (stampDateTime.day == now.day &&
+          stampDateTime.month == now.month &&
+          stampDateTime.year == now.year) {
         ++number;
       }
     }

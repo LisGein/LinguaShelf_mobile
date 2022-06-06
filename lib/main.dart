@@ -5,10 +5,11 @@ import 'applicationstate.dart';
 import 'auth/loginpage.dart';
 import 'page/chatpage.dart';
 import 'page/loadingpage.dart';
-import 'topic.dart';
+import 'page/premiumpage.dart';
 import 'page/accountpage.dart';
 import 'page/topicchooserpage.dart';
 import 'page/unknownpage.dart';
+import 'topic.dart';
 
 class MainWidget extends StatelessWidget {
   const MainWidget({Key? key}) : super(key: key);
@@ -37,6 +38,10 @@ class MainWidget extends StatelessWidget {
         if (uri.pathSegments.first == 'account') {
           return MaterialPageRoute(
               builder: (context) => AccountPage(), settings: settings);
+        }
+        if (uri.pathSegments.first == 'premium') {
+          return MaterialPageRoute(
+              builder: (context) => PremiumPage(), settings: settings);
         }
 
         if (uri.pathSegments.length == 2 && uri.pathSegments.first == 'topic') {
