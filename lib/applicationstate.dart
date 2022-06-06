@@ -197,6 +197,7 @@ class ApplicationState extends ChangeNotifier {
 
   void signOut() {
     FirebaseAuth.instance.signOut();
+    _loginState = ApplicationLoginState.loggedOut;
     notifyListeners();
   }
 }
