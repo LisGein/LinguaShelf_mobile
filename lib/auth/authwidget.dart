@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../widgets/accountwidget.dart';
-import '../widgets/errordialog.dart';
+import '../widgets/extendederrordialog.dart';
 import '../widgets/styledtext.dart';
 
 enum ApplicationLoginState {
@@ -113,7 +113,7 @@ class AuthWidget extends StatelessWidget {
     showDialog<void>(
       context: context,
       builder: (context) {
-        return ErrorDialog(title: title, message: '${(e as dynamic).message}');
+        return ExtendedErrorDialog(title: title, message: '${(e as dynamic).message}');
       },
     );
   }

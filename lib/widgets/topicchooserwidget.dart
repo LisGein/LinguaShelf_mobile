@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../applicationstate.dart';
 import '../auth/authwidget.dart';
+import '../limitationerrordialog.dart';
 import '../widgets/styledtext.dart';
-import 'errordialog.dart';
 
 class TopicChooserWidget extends StatelessWidget {
   const TopicChooserWidget(
@@ -25,7 +25,7 @@ class TopicChooserWidget extends StatelessWidget {
       showDialog<void>(
         context: context,
         builder: (context) {
-          return ErrorDialog(title: "The free limit reached", message: "The number of conversations for free accounts is limited");
+          return LimitationErrorDialog(title: "The free limit reached", message: "The number of conversations for free accounts is limited");
         },
       );
     }
