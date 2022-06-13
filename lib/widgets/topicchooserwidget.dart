@@ -14,10 +14,8 @@ class TopicChooserWidget extends StatelessWidget {
   final String routeName = 'topic';
 
   void openConversation(ApplicationState appState, BuildContext context, dynamic topic) async {
-    await appState.loadOpenAIKey();
-    await appState.loadUserCollection(context);
-    await appState.onOpenedConversation();
-    if (!appState.isLimitReached()) {
+    bool isLimitReached = await appState.preloadOpenAI(context);
+    if (!isLimitReached) {
       Navigator.pushNamed(context,
           "/" + routeName + "/" + topic);
     }
@@ -37,6 +35,7 @@ class TopicChooserWidget extends StatelessWidget {
         builder: (context, appState, _) => FutureBuilder<dynamic>(
             future: appState.jsonReader.loadTopics(),
             builder: (BuildContext context, AsyncSnapshot<dynamic> topics) {
+
               if (!topics.hasData) {
                 return StyledWhiteText("No data in json!");
               }

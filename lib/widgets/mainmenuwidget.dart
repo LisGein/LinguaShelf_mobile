@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../applicationstate.dart';
 import '../pair.dart';
 import '../thema.dart';
 import 'styledtext.dart';
@@ -15,23 +17,27 @@ class MainMenuWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      itemCount: tabs.length,
-      itemBuilder: (BuildContext context, int index) {
-        return GridTile(
-          child: GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, tabs[index].right);
-            },
-            child: Card(
-              color: Thema.topBaseColor,
-              child: Center(child: StyledWhiteText(tabs[index].left)),
+    return Consumer<ApplicationState>(builder: (context, appState, _) {
+      //appState.preloadOpenAI(context);
+      return GridView.builder(
+        itemCount: tabs.length,
+        itemBuilder: (BuildContext context, int index) {
+          return GridTile(
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, tabs[index].right);
+              },
+              child: Card(
+                color: Thema.topBaseColor,
+                child: Center(child: StyledWhiteText(tabs[index].left)),
+              ),
             ),
-          ),
-        );
-      },
-       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 200,),
-    );
+          );
+        },
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 200,
+        ),
+      );
+    });
   }
 }

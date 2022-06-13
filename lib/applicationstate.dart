@@ -53,7 +53,14 @@ class ApplicationState extends ChangeNotifier {
     return Pair(key, requests);
   }
 
-  Future<void> loadOpenAIKey() async {
+  Future<bool> preloadOpenAI(BuildContext context, {bool notify = true}) async {
+    await _loadOpenAIKey(notify: notify).then((value) =>
+        _loadUserCollection(context, notify: notify).then((value) => _onOpenedConversation(notify: notify)));
+
+    return isLimitReached();
+  }
+
+  Future<void> _loadOpenAIKey({bool notify = true}) async {
     String userID = getUserID();
     if (openAI == null || !openAI!.isInitialized()) {
       var pair = await _loadDataForAI();
@@ -63,7 +70,9 @@ class ApplicationState extends ChangeNotifier {
       }
     }
     openAI!.updateUserID(userID);
-    notifyListeners();
+    if (notify) {
+      notifyListeners();
+    }
   }
 
   Future<String> loadTopicsOfDiscussion(Topic topic) async {
@@ -213,7 +222,8 @@ class ApplicationState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loadUserCollection(BuildContext context) async {
+  Future<void> _loadUserCollection(BuildContext context,
+      {bool notify = true}) async {
     String userID = getUserID();
     final CollectionReference postsRef =
         FirebaseFirestore.instance.collection('users');
@@ -229,7 +239,8 @@ class ApplicationState extends ChangeNotifier {
     }
 
     documentReference.snapshots().listen((document) {
-      _readFields(snapshotDoc, userID).then((value) => notifyListeners());
+      _readFields(snapshotDoc, userID)
+          .then((value) => {if (notify) notifyListeners()});
     });
   }
 
@@ -282,7 +293,7 @@ class ApplicationState extends ChangeNotifier {
     }
   }
 
-  Future<void> onOpenedConversation() async {
+  Future<void> _onOpenedConversation({bool notify = true}) async {
     await _readConversationsData();
 
     String userID = getUserID();
@@ -297,10 +308,14 @@ class ApplicationState extends ChangeNotifier {
           stampDateTime.year != now.year;
     });
 
-    conversations.add(Timestamp.fromDate(now));
+    if (!isLimitReached()) {
+      conversations.add(Timestamp.fromDate(now));
+    }
 
     document.update({'conversations': conversations});
-    notifyListeners();
+    if (notify) {
+      notifyListeners();
+    }
   }
 
   void updateNotificationSettings(bool notifyAboutPremium) async {

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'applicationstate.dart';
 import 'auth/loginpage.dart';
 import 'page/chatpage.dart';
+import 'page/grammarcorrectorpage.dart';
 import 'page/loadingpage.dart';
 import 'page/mainmenupage.dart';
 import 'page/premiumpage.dart';
@@ -46,7 +47,11 @@ class MainWidget extends StatelessWidget {
         }
         if (uri.pathSegments.first == 'premium') {
           return MaterialPageRoute(
-              builder: (context) => PremiumPage(), settings: settings);
+              builder: (context) => const PremiumPage(), settings: settings);
+        }
+        if (uri.pathSegments.first == 'grammar_corrections') {
+          return MaterialPageRoute(
+              builder: (context) => const GrammarCorrectorPage(), settings: settings);
         }
 
         if (uri.pathSegments.length == 2 && uri.pathSegments.first == 'topic') {
