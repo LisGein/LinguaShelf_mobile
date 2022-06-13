@@ -5,6 +5,7 @@ import 'applicationstate.dart';
 import 'auth/loginpage.dart';
 import 'page/chatpage.dart';
 import 'page/loadingpage.dart';
+import 'page/mainmenupage.dart';
 import 'page/premiumpage.dart';
 import 'page/accountpage.dart';
 import 'page/topicchooserpage.dart';
@@ -27,10 +28,14 @@ class MainWidget extends StatelessWidget {
       onGenerateRoute: (settings) {
         if (settings.name == '/') {
           return MaterialPageRoute(
-              builder: (context) =>  const TopicChooserPage(), settings: settings);
+              builder: (context) =>  const MainMenuPage(), settings: settings);
         }
 
         var uri = Uri.parse(settings.name!);
+        if (uri.pathSegments.first == 'topics') {
+          return MaterialPageRoute(
+              builder: (context) => const TopicChooserPage(), settings: settings);
+        }
         if (uri.pathSegments.first == 'login') {
           return MaterialPageRoute(
               builder: (context) => const LoginPage(), settings: settings);
