@@ -53,11 +53,9 @@ class ApplicationState extends ChangeNotifier {
     return Pair(key, requests);
   }
 
-  Future<bool> preloadOpenAI(BuildContext context, {bool notify = true}) async {
+  Future<void> preloadOpenAI(BuildContext context, {bool notify = true}) async {
     await _loadOpenAIKey(notify: notify).then((value) =>
-        _loadUserCollection(context, notify: notify).then((value) => _onOpenedConversation(notify: notify)));
-
-    return isLimitReached();
+        _loadUserCollection(context, notify: notify));
   }
 
   Future<void> _loadOpenAIKey({bool notify = true}) async {
@@ -293,7 +291,7 @@ class ApplicationState extends ChangeNotifier {
     }
   }
 
-  Future<void> _onOpenedConversation({bool notify = true}) async {
+  Future<void> onOpenedConversation({bool notify = true}) async {
     await _readConversationsData();
 
     String userID = getUserID();

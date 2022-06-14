@@ -2,32 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../applicationstate.dart';
-import '../auth/authwidget.dart';
-import '../limitationerrordialog.dart';
 import '../widgets/styledtext.dart';
 
 class TopicChooserWidget extends StatelessWidget {
-  const TopicChooserWidget(
-      {Key? key, this.divThickness = 5.0})
+  const TopicChooserWidget({Key? key, this.divThickness = 5.0})
       : super(key: key);
   final double divThickness;
   final String routeName = 'topic';
-
-  void openConversation(ApplicationState appState, BuildContext context, dynamic topic) async {
-    bool isLimitReached = await appState.preloadOpenAI(context);
-    if (!isLimitReached) {
-      Navigator.pushNamed(context,
-          "/" + routeName + "/" + topic);
-    }
-    else {
-      showDialog<void>(
-        context: context,
-        builder: (context) {
-          return LimitationErrorDialog(title: "The free limit reached", message: "The number of conversations for free accounts is limited");
-        },
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +16,6 @@ class TopicChooserWidget extends StatelessWidget {
         builder: (context, appState, _) => FutureBuilder<dynamic>(
             future: appState.jsonReader.loadTopics(),
             builder: (BuildContext context, AsyncSnapshot<dynamic> topics) {
-
               if (!topics.hasData) {
                 return StyledWhiteText("No data in json!");
               }
@@ -45,13 +25,7 @@ class TopicChooserWidget extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                     onTap: () {
-                      if (appState.loginState ==
-                          ApplicationLoginState.loggedIn) {
-
-                        openConversation(appState, context, topics.data[index].left);
-                      } else {
-                        Navigator.pushNamed(context, "/login/");
-                      }
+                      Navigator.pushNamed(context, "/login/");
                     },
                     child: SizedBox(
                         height: 75,

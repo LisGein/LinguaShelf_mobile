@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../applicationstate.dart';
+import '../limitationerrordialog.dart';
 import '../pair.dart';
 import '../thema.dart';
 import 'styledtext.dart';
@@ -15,17 +16,32 @@ class MainMenuWidget extends StatelessWidget {
     Pair("Correct grammar", "/grammar_corrections/")
   ];
 
+  void onTap(ApplicationState appState, BuildContext context, String routeName) async {
+    await appState.preloadOpenAI(context, notify: false);
+    await appState.onOpenedConversation(notify: false);
+    if (!appState.isLimitReached()) {
+      Navigator.pushNamed(context, routeName);
+    }
+    else {
+      showDialog<void>(
+        context: context,
+        builder: (context) {
+          return LimitationErrorDialog(title: "The free limit reached", message: "The number of conversations for free accounts is limited");
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ApplicationState>(builder: (context, appState, _) {
-      //appState.preloadOpenAI(context);
       return GridView.builder(
         itemCount: tabs.length,
         itemBuilder: (BuildContext context, int index) {
           return GridTile(
             child: GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, tabs[index].right);
+                onTap(appState, context, tabs[index].right);
               },
               child: Card(
                 color: Thema.topBaseColor,

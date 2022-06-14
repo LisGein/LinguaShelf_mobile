@@ -66,8 +66,8 @@ class OpenAI {
     return await request("api.openai.com", "v1/engines/text-davinci-edit-001/edits", _generateHeaders(), reqData, false);*/
 
     Map reqData = {
-      "prompt": "Correct this to standard German and explain mistakes:\"" + text + "\". Use only German letters and UTF-8.",
-      "max_tokens" : 150,
+      "prompt": "Correct all mistakes of this German text to standard German and give an explanation of these corrections:\"" + text + "\". Use only German language and UTF-8.",
+      "max_tokens" : text.length*5,
       "temperature" : 1,
       "presence_penalty" : 0,
       "frequency_penalty" : 0
