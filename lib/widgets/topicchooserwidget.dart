@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../applicationstate.dart';
+import '../auth/authwidget.dart';
 import '../widgets/styledtext.dart';
 
 class TopicChooserWidget extends StatelessWidget {
@@ -25,7 +26,13 @@ class TopicChooserWidget extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, "/login/");
+                      if (appState.loginState ==
+                          ApplicationLoginState.loggedIn) {
+                        Navigator.pushNamed(context,
+                            "/" + routeName + "/" + topics.data[index].left);
+                      } else {
+                        Navigator.pushNamed(context, "/login/");
+                      }
                     },
                     child: SizedBox(
                         height: 75,
