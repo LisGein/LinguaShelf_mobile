@@ -64,7 +64,8 @@ class _GrammarCorrectorWidget extends State<GrammarCorrectorWidget> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: OutlinedButton(
+                    child: OutlinedButton.icon(
+                      icon: const Icon(Icons.paste),
                       onPressed: () async {
                         Clipboard.getData(Clipboard.kTextPlain).then((value) {
                           if (value != null) {
@@ -75,19 +76,22 @@ class _GrammarCorrectorWidget extends State<GrammarCorrectorWidget> {
                           ;
                         });
                       },
-                      child: StyledText.color(
+                      label: StyledText.color(
                           'Insert text', Thema.buttonInvertedTextColor),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: MaterialButton(
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Icons.send),
                       onPressed: () async {
                         correctMessage(appState.openAI, promptController.text);
                       },
-                      child:
-                      StyledText.color('Check grammar', Thema.buttonTextColor),
-                      color: Thema.buttonColor,
+                      label: StyledText.color(
+                          'Check grammar', Thema.buttonTextColor),
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Thema.buttonColor)),
                     ),
                   ),
                 ],
@@ -109,16 +113,17 @@ class _GrammarCorrectorWidget extends State<GrammarCorrectorWidget> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: OutlinedButton(
+                    child: OutlinedButton.icon(
+                      icon: const Icon(Icons.copy),
                       style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Thema.buttonInvertedColor)),
+                          backgroundColor: MaterialStateProperty.all(
+                              Thema.buttonInvertedColor)),
                       onPressed: () async {
                         Clipboard.setData(
                             ClipboardData(text: promptController.text));
                       },
-                      child:
-                          StyledText.color('Copy', Thema.buttonInvertedTextColor),
+                      label: StyledText.color(
+                          'Copy', Thema.buttonInvertedTextColor),
                     ),
                   ),
                 ],
